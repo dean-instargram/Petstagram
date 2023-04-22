@@ -22,6 +22,10 @@ export default function Signup() {
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  // 이메일 변경시 중복확인한거 해체 함수
+  const unCheckDUplicate = () => {
+    setonDuplicate(false);
+  };
   // 중복 기능 검사
   const checkDuplicate = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -63,6 +67,9 @@ export default function Signup() {
   };
   const signup = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (formState.email == "") {
+      return alert("이메일을 입력해주세요.");
+    }
     if (!validateEmail(formState.email)) {
       return alert("올바른 이메일 주소가 아닙니다.");
     }
@@ -105,7 +112,6 @@ export default function Signup() {
   };
   // 파이어베이스로 보내주는 객체 상태관리하는 함수
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
-    setonDuplicate(false);
     setFormState((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -122,7 +128,10 @@ export default function Signup() {
             type="email"
             id="email"
             value={formState.email}
-            onChange={handleInputChange}
+            onChange={(e) => {
+              handleInputChange(e);
+              unCheckDUplicate;
+            }}
             required
           />
           <button
