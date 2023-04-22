@@ -19,9 +19,19 @@ export default function Signup() {
   });
   const [onButton, setonButton] = useState<boolean>(true);
   const [onPassword, setonPassword] = useState<boolean>(true);
+  const [onDuplicate, setonDuplicate] = useState<boolean>(true);
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-
+  const checkDuplicate = async () => {
+    const emailSnapshot = await usersRef
+      .where("email", "==", formState.email)
+      .get();
+    if (!emailSnapshot.empty) {
+      alert("이미 존재하는 아이디입니다.");
+    } else {
+      alert("사용가능한 아이디입니다.");
+    }
+  };
   const confirmInputChange = () => {
     if (passwordRef.current.value == confirmPasswordRef.current.value) {
       setonPassword(true);
@@ -75,7 +85,7 @@ export default function Signup() {
             onChange={handleInputChange}
             required
           />
-          <button>중복확인</button>
+          <button onClick={checkDuplicate}>중복확인</button>
         </label>
         <label htmlFor="displayName">
           사용자 이름:
