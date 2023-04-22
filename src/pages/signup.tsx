@@ -1,9 +1,8 @@
-// import { auth } from "@/firebase/app";
-import { auth, db, pushData, usersRef } from "@/firebase/app";
-import firebase from "firebase/compat/app";
+import { auth, db, usersRef } from "@/firebase/app";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import styled from "styled-components";
+import { useRouter } from "next/router";
 
 interface FormState {
   email: string;
@@ -17,17 +16,16 @@ export default function Signup() {
     password: "",
     displayName: "",
   });
-  const [onButton, setonButton] = useState<boolean>(false);
+  const [onButton, setonButton] = useState<boolean>(true);
   const [onPassword, setonPassword] = useState<boolean>(true);
   const [onDuplicate, setonDuplicate] = useState<boolean>(false);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
-
+  const router = useRouter();
   // 중복 기능 검사
   const checkDuplicate = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (emailRef.current && emailRef.current.value == "") {
+    if (formState.email == "") {
       return alert("아이디를 입력해주세요");
     }
     const emailSnapshot = await usersRef
@@ -42,7 +40,7 @@ export default function Signup() {
     }
   };
   // 비밀번호 확인 기능
-  const confirmInputChange = () => {
+  const confirmInputChange = (): void => {
     if (
       passwordRef.current &&
       confirmPasswordRef.current &&
@@ -54,7 +52,32 @@ export default function Signup() {
     }
   };
   // 회원가입 버튼
-  const signup = async () => {
+  function validateEmail(email: string) {
+    // 이메일 주소의 유효성을 검사하는 정규식
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+  }
+  const isValidPassword = (password: string) => {
+    const passwordRegex = /^.{6,}$/;
+    return passwordRegex.test(password);
+  };
+  const signup = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!validateEmail(formState.email)) {
+      return alert("올바른 이메일 주소가 아닙니다.");
+    }
+    if (!onDuplicate) {
+      return alert("중복확인은 필수입니다.");
+    }
+    if (!formState.displayName) {
+      return alert("사용자 이름을 입력해주세요.");
+    }
+    if (!isValidPassword(formState.password)) {
+      return alert("비밀번호는 6자 이상이어야 합니다.");
+    }
+    if (!onPassword) {
+      return alert("비밀번호를 확인해주세요.");
+    }
     setonButton(false);
     try {
       await auth
@@ -74,28 +97,19 @@ export default function Signup() {
             following: [],
             scrap: [],
           });
+          router.push("/login");
         });
     } catch (error) {
       console.error(error);
     }
   };
-
+  // 파이어베이스로 보내주는 객체 상태관리하는 함수
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
+    setonDuplicate(false);
     setFormState((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
     }));
-    if (
-      formState.email.includes("@") &&
-      formState.password &&
-      formState.displayName &&
-      onDuplicate &&
-      onPassword
-    ) {
-      setonButton(true);
-    } else {
-      setonButton(false);
-    }
   };
 
   return (
@@ -107,7 +121,6 @@ export default function Signup() {
           <input
             type="email"
             id="email"
-            ref={emailRef}
             value={formState.email}
             onChange={handleInputChange}
             required
@@ -137,7 +150,10 @@ export default function Signup() {
             id="password"
             ref={passwordRef}
             value={formState.password}
-            onChange={handleInputChange}
+            onChange={(e) => {
+              handleInputChange(e);
+              confirmInputChange();
+            }}
             required
           />
         </label>
@@ -150,7 +166,7 @@ export default function Signup() {
             required
           />
         </label>
-        {onPassword ? null : <p>비밀번호가 틀립니다.</p>}
+        {/* {onPassword ? null : <p>비밀번호가 틀립니다.</p>} */}
         <button
           type="submit"
           onClick={signup}
