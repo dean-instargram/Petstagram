@@ -19,18 +19,25 @@ export default function Signup() {
   });
   const [onButton, setonButton] = useState<boolean>(false);
   const [onPassword, setonPassword] = useState<boolean>(true);
-  const [onDuplicate, setonDuplicate] = useState<boolean>(true);
+  const [onDuplicate, setonDuplicate] = useState<boolean>(false);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
 
   // 중복 기능 검사
-  const checkDuplicate = async () => {
+  const checkDuplicate = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (emailRef.current && emailRef.current.value == "") {
+      return alert("아이디를 입력해주세요");
+    }
     const emailSnapshot = await usersRef
       .where("email", "==", formState.email)
       .get();
     if (!emailSnapshot.empty) {
+      setonDuplicate(false);
       alert("이미 존재하는 아이디입니다.");
     } else {
+      setonDuplicate(true);
       alert("사용가능한 아이디입니다.");
     }
   };
@@ -100,11 +107,18 @@ export default function Signup() {
           <input
             type="email"
             id="email"
+            ref={emailRef}
             value={formState.email}
             onChange={handleInputChange}
             required
           />
-          <button onClick={checkDuplicate}>중복확인</button>
+          <button
+            onClick={(e) => {
+              checkDuplicate(e);
+            }}
+          >
+            중복확인
+          </button>
         </label>
         <label htmlFor="displayName">
           사용자 이름:
@@ -144,22 +158,25 @@ export default function Signup() {
         >
           가입
         </button>
-        <Link href="/login">로그인하기</Link>
       </Form>
+      <Link href="/login">로그인하기</Link>
     </Article>
   );
 }
 
 const Article = styled.article`
   display: flex;
+  flex-flow: column;
   align-items: center;
   justify-content: center;
   width: 100%;
 `;
 const Form = styled.form`
   border: 1px solid black;
+  width: 100%;
   max-width: 398px;
   min-width: 320px;
   display: flex;
   flex-flow: column;
+  height: 572px;
 `;
