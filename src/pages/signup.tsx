@@ -2,7 +2,7 @@
 import { auth, db, pushData, usersRef } from "@/firebase/app";
 import firebase from "firebase/compat/app";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
 interface FormState {
@@ -18,7 +18,17 @@ export default function Signup() {
     displayName: "",
   });
   const [onButton, setonButton] = useState<boolean>(true);
-  const confirmInputChange = () => {};
+  const [onPassword, setonPassword] = useState<boolean>(true);
+  const passwordRef = useRef();
+  const confirmPasswordRef = useRef();
+
+  const confirmInputChange = () => {
+    if (passwordRef.current.value == confirmPasswordRef.current.value) {
+      setonPassword(true);
+    } else {
+      setonPassword(false);
+    }
+  };
   const signup = async () => {
     // setonButton(false);
     try {
@@ -82,6 +92,7 @@ export default function Signup() {
           <input
             type="password"
             id="password"
+            ref={passwordRef}
             value={formState.password}
             onChange={handleInputChange}
             required
@@ -89,8 +100,14 @@ export default function Signup() {
         </label>
         <label htmlFor="confirmPassword">
           비밀번호 확인:
-          <input type="password" onChange={confirmInputChange} required />
+          <input
+            type="password"
+            ref={confirmPasswordRef}
+            onChange={confirmInputChange}
+            required
+          />
         </label>
+        {onPassword ? null : <p>비밀번호가 틀립니다.</p>}
         <button
           type="submit"
           onClick={signup}
