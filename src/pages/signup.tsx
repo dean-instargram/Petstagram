@@ -17,11 +17,13 @@ export default function Signup() {
     password: "",
     displayName: "",
   });
-  const [onButton, setonButton] = useState<boolean>(true);
+  const [onButton, setonButton] = useState<boolean>(false);
   const [onPassword, setonPassword] = useState<boolean>(true);
   const [onDuplicate, setonDuplicate] = useState<boolean>(true);
-  const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
+
+  // 중복 기능 검사
   const checkDuplicate = async () => {
     const emailSnapshot = await usersRef
       .where("email", "==", formState.email)
@@ -32,15 +34,21 @@ export default function Signup() {
       alert("사용가능한 아이디입니다.");
     }
   };
+  // 비밀번호 확인 기능
   const confirmInputChange = () => {
-    if (passwordRef.current.value == confirmPasswordRef.current.value) {
+    if (
+      passwordRef.current &&
+      confirmPasswordRef.current &&
+      passwordRef.current.value == confirmPasswordRef.current.value
+    ) {
       setonPassword(true);
     } else {
       setonPassword(false);
     }
   };
+  // 회원가입 버튼
   const signup = async () => {
-    // setonButton(false);
+    setonButton(false);
     try {
       await auth
         .createUserWithEmailAndPassword(formState.email, formState.password)
@@ -70,6 +78,17 @@ export default function Signup() {
       ...prevState,
       [e.target.id]: e.target.value,
     }));
+    if (
+      formState.email.includes("@") &&
+      formState.password &&
+      formState.displayName &&
+      onDuplicate &&
+      onPassword
+    ) {
+      setonButton(true);
+    } else {
+      setonButton(false);
+    }
   };
 
   return (
