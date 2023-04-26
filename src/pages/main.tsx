@@ -1,5 +1,6 @@
 import { PostCard, RecommendFollow } from '@/components';
 import InfiniteScroll from '@/components/InfiniteScroll/InfiniteScroll';
+import { UploadData } from '@/components/InfiniteScroll/UploadData';
 import styled from 'styled-components';
 
 export default function Main() {
@@ -12,7 +13,8 @@ export default function Main() {
         <PostCard />
         <PostCard />
         {/* 무한 스크롤 테스트 */}
-        <InfiniteScroll />
+        {/* <InfiniteScroll /> */}
+        <UploadData />
       </PostSection>
       <RecommendFollow />
     </MainContainer>
