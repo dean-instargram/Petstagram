@@ -1,4 +1,5 @@
 import { PostCard, RecommendFollow } from '@/components';
+import InfiniteScroll from '@/components/InfiniteScroll/InfiniteScroll';
 import styled from 'styled-components';
 
 export default function Main() {
@@ -10,6 +11,8 @@ export default function Main() {
         <h2>게시물</h2>
         <PostCard />
         <PostCard />
+        {/* 무한 스크롤 테스트 */}
+        <InfiniteScroll />
       </PostSection>
       <RecommendFollow />
     </MainContainer>
