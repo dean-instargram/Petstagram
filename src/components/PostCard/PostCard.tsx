@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
+import { Post } from '@/components/InfiniteScroll/postList';
 
 const testImageObject = [
   {
@@ -18,7 +19,13 @@ const testImageObject = [
   },
 ];
 
-export function PostCard() {
+interface PostCardProps {
+  post: Post;
+}
+
+export function PostCard({ post }: PostCardProps) {
+  const images = post.images;
+
   return (
     <>
       <Article>
@@ -33,7 +40,7 @@ export function PostCard() {
           <p>1일</p>
           <MoreButton>...</MoreButton>
         </HeaderSection>
-        <ImageSwiper images={testImageObject} />
+        <ImageSwiper images={images} />
         <FlexRow>
           <button>좋아요</button>
           <button>댓글</button>
@@ -45,18 +52,19 @@ export function PostCard() {
             <Link href='/main' passHref>
               <IdLink>to06109</IdLink>
             </Link>
-            <p>
-              님 외 <strong>여러명</strong>이 좋아합니다
-            </p>
+            {post.like.length > 1 ? (
+              <p>
+                님 외 <strong>{post.like.length - 1}</strong>명이 좋아합니다
+              </p>
+            ) : (
+              <p>님이 좋아합니다</p>
+            )}
           </FlexRow>
           <FlexRow>
             <Link href='/main' passHref>
               <IdLink>yesong</IdLink>
             </Link>
-            <p>
-              비가 많이 내렸던 촬영날 ☔️ 덥고 습한데도 꿉꿉하지 않았던
-              와샤슬랙스 *.* 벨티드 디테일이 있어 허리를 조절...{' '}
-            </p>
+            <p>{post.content}</p>
           </FlexRow>
           <MoreButton>더 보기</MoreButton>
           <MoreButton>댓글 46개 모두 보기</MoreButton>

@@ -1,9 +1,21 @@
 // components/InfiniteScroll.tsx
 import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '@/redux/userUid';
-import { postType, getPostList } from './postList';
+import { useSelector } from 'react-redux';
+import { Post } from './postList';
+import { PostCard } from '@/components';
+
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  startAfter,
+} from 'firebase/firestore';
+import { db } from '@/firebase/app';
+
+let lastVisible: any = undefined;
 
 interface state {
   userUid: { value: string };
@@ -14,9 +26,42 @@ const InfiniteScroll = (): JSX.Element => {
   console.log('유저아이디', userUid);
   // 리덕스에서 유저아이디 받기
 
-  const [page, setPage] = useState<number>(1);
-  const [posts, setPosts] = useState<postType[]>(getPostList(1));
+  const [posts, setPosts] = useState<Post[]>([]);
   // 요청할 페이지 번호 변수
+
+  const getNextPosts = () => {
+    let q;
+    if (lastVisible === -1) {
+      alert('마지막 입니다~');
+      return;
+    } else if (lastVisible) {
+      // 다음꺼 렌더링
+      q = query(
+        collection(db, 'posts'),
+        orderBy('createAt', 'desc'),
+        limit(2),
+        startAfter(lastVisible)
+      );
+    } else {
+      // 처음 렌더링
+      q = query(collection(db, 'posts'), orderBy('createAt', 'desc'), limit(4));
+    }
+
+    getDocs(q).then((snapshot) => {
+      setPosts((posts) => {
+        const arr = [...posts];
+        snapshot.forEach((doc) => {
+          arr.push(doc.data() as Post);
+        });
+        return arr;
+      });
+      if (snapshot.docs.length === 0) {
+        lastVisible = -1;
+      } else {
+        lastVisible = snapshot.docs[snapshot.docs.length - 1];
+      }
+    });
+  };
 
   const handleScroll = useCallback((): void => {
     const { innerHeight } = window;
@@ -30,14 +75,9 @@ const InfiniteScroll = (): JSX.Element => {
 
     if (Math.round(scrollTop + innerHeight) >= scrollHeight) {
       // scrollTop과 innerHeight를 더한 값이 scrollHeight보다 크다면, 가장 아래에 도달했다는 의미이다.
-
-      setPosts(posts.concat(getPostList(page + 1)));
-      // 페이지에 따라서 불러온 배열을 posts 배열과 합쳐줍니다.
-
-      setPage((prevPage: number) => prevPage + 1);
-      // 페이지 state 변수의 값도 1씩 늘려줍니다.
+      getNextPosts();
     }
-  }, [page, posts]);
+  }, [posts]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, true);
@@ -51,8 +91,8 @@ const InfiniteScroll = (): JSX.Element => {
 
   return (
     <Container>
-      {posts.map((post: postType, idx: number) => (
-        <PostItem key={idx}>{post.contents}</PostItem>
+      {posts.map((post: Post, idx: number) => (
+        <PostCard post={post} />
       ))}
     </Container>
   );
