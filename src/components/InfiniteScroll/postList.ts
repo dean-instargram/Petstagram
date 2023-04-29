@@ -29,3 +29,16 @@ export type Post = {
   like: string[];
   comment: Comment[];
 };
+
+export interface User {
+  name: string;
+  nickname: string;
+  email: string;
+  post_uid: string[] | null;
+  introduce: string | null;
+  profile_url: string | null;
+  phone: string | null;
+  followers: string[] | null;
+  following: string[];
+  scrap: string[] | null;
+}

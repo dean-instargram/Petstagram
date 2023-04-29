@@ -1,5 +1,6 @@
 import { PostCard, RecommendFollow } from '@/components';
 import InfiniteScroll from '@/components/InfiniteScroll/InfiniteScroll';
+import { UploadData } from '@/components/InfiniteScroll/UploadData';
 import styled from 'styled-components';
 
 const testDatas = [
@@ -82,11 +83,12 @@ export default function Main() {
       <PostSection>
         {/* a11y로 숨기기 */}
         <h2>게시물</h2>
-        {testDatas.map((data) => (
+        {/* {testDatas.map((data) => (
           <PostCard post={data} />
-        ))}
+        ))} */}
         {/* 무한 스크롤 테스트 */}
         <InfiniteScroll />
+        {/* <UploadData /> */}
       </PostSection>
       <RecommendFollow />
     </MainContainer>

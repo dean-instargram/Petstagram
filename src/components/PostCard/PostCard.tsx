@@ -2,22 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
-import { Post } from '@/components/InfiniteScroll/postList';
-
-const testImageObject = [
-  {
-    src: 'https://dimg.donga.com/wps/NEWS/IMAGE/2022/01/28/111500268.2.jpg',
-    alt: '멍뭉이1',
-  },
-  {
-    src: 'https://img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/32E9/image/BA2Qyx3O2oTyEOsXe2ZtE8cRqGk.JPG',
-    alt: '멍뭉이2',
-  },
-  {
-    src: 'https://interbalance.org/wp-content/uploads/2021/08/flouffy-VBkIK3qj3QE-unsplash-scaled-e1631077364762.jpg',
-    alt: '멍뭉이3',
-  },
-];
+import { Post, User } from '@/components/InfiniteScroll/postList';
 
 interface PostCardProps {
   post: Post;
@@ -25,6 +10,7 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   const images = post.images;
+  // const userId = user.email.split('@')[0];
 
   return (
     <>
