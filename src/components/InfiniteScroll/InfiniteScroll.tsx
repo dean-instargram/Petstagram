@@ -15,7 +15,6 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from '@/firebase/app';
-import { getData } from '@/firebase/utils';
 
 let lastVisible: any = undefined;
 let isFirst = true;
@@ -24,11 +23,42 @@ interface state {
   userUid: { value: string };
 }
 
+interface dataState {
+  userData: {
+    isLoading: boolean;
+    error: boolean;
+    data: User;
+  };
+}
 const InfiniteScroll = (): JSX.Element => {
   const userUid = useSelector((state: state) => state.userUid.value);
+  const userInfo = useSelector((state: dataState) => {
+    const { isLoading, error, data } = state.userData;
+    return { isLoading, error, data };
+  });
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userError, setUserError] = useState<boolean>(false);
+  const [userData, setUserData] = useState<User>();
+
   const [posts, setPosts] = useState<Post[]>([]);
-  const [follows, setFollows] = useState<string[]>([userUid]);
-  const [isGetFollows, setIsGetFollows] = useState<boolean>(false);
+  const [follows, setFollows] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (follows.length != 0 && isFirst) {
+      getNextPosts();
+      isFirst = false;
+    }
+  }, [follows]);
+
+  useEffect(() => {
+    if (!userInfo.isLoading && userData === undefined) {
+      setIsLoading(userInfo.isLoading);
+      setUserData(userInfo.data);
+      setUserError(userInfo.error);
+      setFollows([userUid, ...userInfo.data.following]);
+    }
+  }, [userInfo]);
 
   const getNextPosts = () => {
     let q;
@@ -39,7 +69,7 @@ const InfiniteScroll = (): JSX.Element => {
       // 다음꺼 렌더링
       q = query(
         collection(db, 'posts'),
-        // where('user_uid', 'in', follows),
+        where('user_uid', 'in', follows),
         orderBy('createAt', 'desc'),
         limit(2),
         startAfter(lastVisible)
@@ -48,7 +78,7 @@ const InfiniteScroll = (): JSX.Element => {
       // 처음 렌더링
       q = query(
         collection(db, 'posts'),
-        // where('user_uid', 'in', follows),
+        where('user_uid', 'in', follows),
         orderBy('createAt', 'desc'),
         limit(4)
       );
@@ -71,27 +101,6 @@ const InfiniteScroll = (): JSX.Element => {
     });
   };
 
-  // 최초 한 번만 실행
-  useEffect(() => {
-    getNextPosts();
-  }, []);
-
-  // useEffect(() => {
-  //   if (follows[0] == '0') setFollows([userUid]);
-
-  //   // 유저의 팔로잉 목록 불러오기///
-  //   const getUserData = async () => {
-  //     if (userUid != '0') {
-  //       const userData = (await getData('users', userUid)) as User;
-  //       setFollows([userUid, ...userData.following]);
-  //       setIsGetFollows(true);
-  //     }
-  //   };
-
-  //   getUserData();
-  //   console.log(follows, userUid, isGetFollows);
-  // }, [userUid]);
-
   const handleScroll = useCallback((): void => {
     const { innerHeight } = window;
     // 브라우저창 내용의 크기 (스크롤을 포함하지 않음)
@@ -101,11 +110,11 @@ const InfiniteScroll = (): JSX.Element => {
     // 현재 스크롤바의 위치////
     if (Math.round(scrollTop + innerHeight) >= scrollHeight) {
       // scrollTop과 innerHeight를 더한 값이 scrollHeight보다 크다면, 가장 아래에 도달했다는 의미이다.
-      // if (isGetFollows) {
-      getNextPosts();
-      // }
+      if (follows.length != 0) {
+        getNextPosts();
+      }
     }
-  }, [posts]);
+  }, [posts, follows]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, true);
@@ -132,10 +141,4 @@ const Container = styled.div`
   width: 100%;
   max-width: 1000px;
   margin: 4rem auto;
-`;
-
-const PostItem = styled.div`
-  width: 100%;
-  height: 350px;
-  border: 2px solid black;
 `;
