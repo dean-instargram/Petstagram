@@ -19,30 +19,18 @@ interface dataState {
 }
 
 export default function Main() {
+  const dispatch = useDispatch();
   const userUid = useSelector((state: state) => state.userUid.value);
   const userInfo = useSelector((state: dataState) => {
     const { isLoading, error, data } = state.userData;
     return { isLoading, error, data };
   });
 
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userError, setUserError] = useState<boolean>(false);
-  const [userData, setUserData] = useState<User>();
-
   useEffect(() => {
     if (userUid != '0' && userInfo.data.name === '') {
       dispatch(getUserData(userUid) as any);
     }
   }, [userUid]);
-
-  useEffect(() => {
-    if (!userInfo.isLoading && userData === undefined) {
-      setIsLoading(userInfo.isLoading);
-      setUserData(userInfo.data);
-      setUserError(userInfo.error);
-    }
-  }, [userInfo]);
 
   return (
     <MainContainer>

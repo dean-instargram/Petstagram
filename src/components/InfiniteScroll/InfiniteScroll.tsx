@@ -30,7 +30,7 @@ interface dataState {
     data: User;
   };
 }
-const InfiniteScroll = (): JSX.Element => {
+export function InfiniteScroll(): JSX.Element {
   const userUid = useSelector((state: state) => state.userUid.value);
   const userInfo = useSelector((state: dataState) => {
     const { isLoading, error, data } = state.userData;
@@ -133,7 +133,7 @@ const InfiniteScroll = (): JSX.Element => {
       ))}
     </Container>
   );
-};
+}
 
 export default InfiniteScroll;
 
