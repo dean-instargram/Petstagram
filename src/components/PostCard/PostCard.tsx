@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
 import { Post, User, CreateAtType } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
+import baseProfile from '@/public/profile.jpg';
 import Image from 'next/image';
 
 interface PostCardProps {
@@ -37,7 +38,7 @@ export function PostCard({ post }: PostCardProps) {
   const getLikeUsers = async (uid: string) => {
     if (!postUserData) {
       const result = (await getData('users', uid)) as User;
-      if (result) setLikeEmail([...likeEmail, result.email]);
+      if (result) setLikeEmail((likeEmail) => [...likeEmail, result.email]);
     }
   };
 
@@ -115,19 +116,32 @@ export function PostCard({ post }: PostCardProps) {
             <p>{post.content}</p>
           </FlexRow>
           <MoreButton>더 보기</MoreButton>
-          <MoreButton>댓글 46개 모두 보기</MoreButton>
-          <FlexRow>
-            <Link href='/main' passHref>
-              <IdLink>to06109</IdLink>
-            </Link>
-            <p>사이즈는 어떻게 되나요?</p>
-          </FlexRow>
-          <FlexRow>
-            <Link href='/main' passHref>
-              <IdLink>yesong</IdLink>
-            </Link>
-            <p>s, m, l, xl 이렇게 있습니다 고갱님!</p>
-          </FlexRow>
+          <MoreButton>댓글 {post.comment.length}개 모두 보기</MoreButton>
+          {post.comment.map((data) => {
+            return (
+              <>
+                <FlexRow>
+                  <Link href='/main' passHref>
+                    <IdLink>{data.email.split('@')[0]}</IdLink>
+                  </Link>
+                  <p>{data.content}</p>
+                </FlexRow>
+                {data.recomment.length != 0
+                  ? data.recomment.map((recomment) => {
+                      return (
+                        <FlexRow>
+                          <p>@{data.email.split('@')[0]} </p>
+                          <Link href='/main' passHref>
+                            <IdLink>{recomment.email.split('@')[0]}</IdLink>
+                          </Link>
+                          <p>{recomment.content}</p>
+                        </FlexRow>
+                      );
+                    })
+                  : null}
+              </>
+            );
+          })}
           <input type='text' placeholder='댓글 달기...'></input>
           <button>이모티콘</button>
         </CommentSection>
@@ -137,18 +151,25 @@ export function PostCard({ post }: PostCardProps) {
 }
 
 const renderProfile = (postUserData: User | undefined) => {
-  // 추후에 기본 프로필 이미지로 변경
-  let userProfileImage: string =
-    'https://dimg.donga.com/wps/NEWS/IMAGE/2022/01/28/111500268.2.jpg';
   if (
     postUserData &&
     postUserData.profile_url &&
     postUserData.profile_url != ''
   ) {
-    userProfileImage = postUserData.profile_url;
+    return (
+      <StyledImage
+        src={postUserData.profile_url}
+        alt='프로필 사진'
+        width={100}
+        height={100}
+        unoptimized
+      />
+    );
   }
 
-  return <img src={userProfileImage} alt='프로필 사진' />;
+  return (
+    <StyledImage src={baseProfile} alt='프로필 사진' width={100} height={100} />
+  );
 };
 
 const Article = styled.article`
@@ -172,13 +193,13 @@ const ProfileButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
+`;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
+const StyledImage = styled(Image)`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 
 const MoreButton = styled.button`

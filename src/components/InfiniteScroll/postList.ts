@@ -3,6 +3,7 @@ import firebase from '@/firebase/app';
 
 interface Recomment {
   user_uid: string;
+  email: string;
   content: string;
   createAt: string | firebase.firestore.FieldValue;
   like: string[];
@@ -10,6 +11,7 @@ interface Recomment {
 
 interface Comment {
   user_uid: string;
+  email: string;
   content: string;
   createAt: string | firebase.firestore.FieldValue;
   like: string[];
