@@ -4,6 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { state, userDataState } from '@/types/index';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebase/app';
+import { User } from '@/types/index';
 
 export function RecommendFollow() {
   const userUid = useSelector((state: state) => state.userUid.value);
@@ -17,6 +20,11 @@ export function RecommendFollow() {
 
   useEffect(() => {
     console.log(userUid, follows);
+    if (follows != undefined) {
+      follows.forEach((uid) => {
+        getFollowingList(uid);
+      });
+    }
   }, [follows]);
 
   useEffect(() => {
@@ -25,6 +33,15 @@ export function RecommendFollow() {
       setFollows([...userInfo.data.following]);
     }
   }, [userInfo]);
+
+  const getFollowingList = async (uid: string) => {
+    const userDataRef = doc(db, 'users', uid);
+    const userDataSnapshot = await getDoc(userDataRef);
+    if (userDataSnapshot.exists()) {
+      const userData = userDataSnapshot.data() as User;
+      console.log(userData.following);
+    }
+  };
 
   const userData = {
     email: 'to06109@naver.com',
