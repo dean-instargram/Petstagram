@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { FollowList, UserList } from '@/components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { state, userDataState } from '@/types/index';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase/app';
-import { User } from '@/types/index';
+import { User } from '@/components/InfiniteScroll/postList';
+
+interface FollowingObject {
+  [followingUid: string]: string[];
+}
 
 export function RecommendFollow() {
   const userUid = useSelector((state: state) => state.userUid.value);
@@ -17,9 +21,12 @@ export function RecommendFollow() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [follows, setFollows] = useState<string[]>();
+  const [followingObject, setFollowingObject] = useState<FollowingObject>({});
+  const [recommendFollowing, setRecommendFollowing] = useState<FollowingObject>(
+    {}
+  );
 
   useEffect(() => {
-    console.log(userUid, follows);
     if (follows != undefined) {
       follows.forEach((uid) => {
         getFollowingList(uid);
@@ -34,13 +41,51 @@ export function RecommendFollow() {
     }
   }, [userInfo]);
 
+  useEffect(() => {
+    if (followingObject != undefined) {
+      const sortedFollowList = Object.fromEntries(
+        Object.entries(followingObject).sort(
+          (a: [string, string[]], b: [string, string[]]): number => {
+            return b[1].length - a[1].length;
+          }
+        )
+      );
+      for (const [key, value] of Object.entries(sortedFollowList)) {
+        if (Object.keys(recommendFollowing).length >= 5) {
+          break;
+        }
+        setRecommendFollowing((prevRecommend) => {
+          const newRecommendFollowing = { ...prevRecommend };
+          newRecommendFollowing[key] = value;
+          return newRecommendFollowing;
+        });
+      }
+    }
+  }, [followingObject]);
+
   const getFollowingList = async (uid: string) => {
     const userDataRef = doc(db, 'users', uid);
     const userDataSnapshot = await getDoc(userDataRef);
     if (userDataSnapshot.exists()) {
       const userData = userDataSnapshot.data() as User;
-      console.log(userData.following);
+      pushFollowingList(userData.following, uid);
     }
+  };
+
+  const pushFollowingList = (followingList: string[], loginUserUid: string) => {
+    setFollowingObject((prevFollowingObject) => {
+      const newFollowingObject = { ...prevFollowingObject };
+      followingList.forEach((followingUserUid) => {
+        if (!newFollowingObject[followingUserUid]) {
+          newFollowingObject[followingUserUid] = [loginUserUid];
+        } else {
+          if (!newFollowingObject[followingUserUid].includes(loginUserUid)) {
+            newFollowingObject[followingUserUid].push(loginUserUid);
+          }
+        }
+      });
+      return newFollowingObject;
+    });
   };
 
   const userData = {
@@ -84,6 +129,22 @@ export function RecommendFollow() {
 
   return (
     <FollowArticle>
+      {Object.entries(recommendFollowing)?.map(
+        ([key, value]: [string, string[]]) => {
+          return (
+            <>
+              <p>추천할 사람: {key}</p>
+              <p>
+                그 사람을 팔로하는 사람들:{' '}
+                {value.map((user) => {
+                  return <div>{user}</div>;
+                })}
+              </p>
+              <br />
+            </>
+          );
+        }
+      )}
       <UserList profile={userData} />
       <TitleBox>
         <h2>회원님을 위한 추천</h2>
