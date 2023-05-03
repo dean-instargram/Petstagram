@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Post, User } from './postList';
 import { PostCard } from '@/components';
+import { state, userDataState } from '@/types/index';
 
 import {
   collection,
@@ -19,20 +20,9 @@ import { db } from '@/firebase/app';
 let lastVisible: any = undefined;
 let isFirst = true;
 
-interface state {
-  userUid: { value: string };
-}
-
-interface dataState {
-  userData: {
-    isLoading: boolean;
-    error: boolean;
-    data: User;
-  };
-}
 export function InfiniteScroll(): JSX.Element {
   const userUid = useSelector((state: state) => state.userUid.value);
-  const userInfo = useSelector((state: dataState) => {
+  const userInfo = useSelector((state: userDataState) => {
     const { isLoading, error, data } = state.userData;
     return { isLoading, error, data };
   });

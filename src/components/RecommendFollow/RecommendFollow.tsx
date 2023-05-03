@@ -1,8 +1,31 @@
+import { useState, useEffect } from 'react';
 import { FollowList, UserList } from '@/components';
+import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import styled from 'styled-components';
+import { state, userDataState } from '@/types/index';
 
 export function RecommendFollow() {
+  const userUid = useSelector((state: state) => state.userUid.value);
+  const userInfo = useSelector((state: userDataState) => {
+    const { isLoading, error, data } = state.userData;
+    return { isLoading, error, data };
+  });
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [follows, setFollows] = useState<string[]>();
+
+  useEffect(() => {
+    console.log(userUid, follows);
+  }, [follows]);
+
+  useEffect(() => {
+    if (!userInfo.isLoading && follows === undefined) {
+      setIsLoading(userInfo.isLoading);
+      setFollows([...userInfo.data.following]);
+    }
+  }, [userInfo]);
+
   const userData = {
     email: 'to06109@naver.com',
     profile_url:
