@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 
 type UserListProps = {
-  profile: { email: string; profile_url: string; nickname: string };
+  profile: { email: string; profile_url: string; paragraph: string };
 };
 
 export function UserList({ profile }: UserListProps) {
@@ -10,13 +10,13 @@ export function UserList({ profile }: UserListProps) {
   return (
     <ListBox>
       <ProfileButton>
-        <img src={profile.profile_url} alt={profile.nickname} />
+        <img src={profile.profile_url} alt={profile.paragraph} />
       </ProfileButton>
       <ProfileBox>
         <LinkStyle href='/main' passHref>
           <IdLink>{user_id}</IdLink>
         </LinkStyle>
-        <Name>{profile.nickname}</Name>
+        <Name>{profile.paragraph}</Name>
       </ProfileBox>
     </ListBox>
   );
