@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import styled from 'styled-components';
+import Image from 'next/image';
+import baseProfile from '@/public/profile.jpg';
 
 type UserListProps = {
   profile: { email: string; profile_url: string; paragraph: string };
@@ -10,7 +12,16 @@ export function UserList({ profile }: UserListProps) {
   return (
     <ListBox>
       <ProfileButton>
-        <img src={profile.profile_url} alt={profile.paragraph} />
+        {profile.profile_url === '' ? (
+          <StyledImage
+            src={baseProfile}
+            alt='프로필 사진'
+            width={100}
+            height={100}
+          />
+        ) : (
+          <img src={profile.profile_url} alt={profile.paragraph} />
+        )}
       </ProfileButton>
       <ProfileBox>
         <LinkStyle href='/main' passHref>
@@ -44,6 +55,13 @@ const ProfileButton = styled.button`
     border-radius: 50%;
     object-fit: cover;
   }
+`;
+
+const StyledImage = styled(Image)`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 
 const ProfileBox = styled.div`
