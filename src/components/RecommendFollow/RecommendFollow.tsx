@@ -111,6 +111,14 @@ export function RecommendFollow() {
 
       setRecommendProfile((prevData) => {
         const newRecommendData = [...prevData];
+
+        if (
+          newRecommendData.some((cur) => {
+            return cur.email === recommendData.email;
+          })
+        ) {
+          return newRecommendData;
+        }
         newRecommendData.push(recommendData);
         return newRecommendData;
       });
@@ -125,7 +133,7 @@ export function RecommendFollow() {
     };
 
     startInit();
-    Object.entries(recommendFollowing)?.map(([key, value]) => {
+    Object.entries(recommendFollowing).map(([key, value]) => {
       getRecommendData(key, value);
     });
   }, [recommendFollowing]);
@@ -155,37 +163,6 @@ export function RecommendFollow() {
     });
   };
 
-  //   {
-  //     email: 'bsw@naver.com',
-  //     profile_url:
-  //       'https://img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/32E9/image/BA2Qyx3O2oTyEOsXe2ZtE8cRqGk.JPG',
-  //     nickname: '멍뭉이1',
-  //   },
-  //   {
-  //     email: 'yesong@naver.com',
-  //     profile_url:
-  //       'https://interbalance.org/wp-content/uploads/2021/08/flouffy-VBkIK3qj3QE-unsplash-scaled-e1631077364762.jpg',
-  //     nickname: '멍뭉이2',
-  //   },
-  //   {
-  //     email: 'bsw@naver.com',
-  //     profile_url:
-  //       'https://img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/32E9/image/BA2Qyx3O2oTyEOsXe2ZtE8cRqGk.JPG',
-  //     nickname: '멍뭉이1',
-  //   },
-  //   {s
-  //     email: 'yesong@naver.com',
-  //     profile_url:
-  //       'https://interbalance.org/wp-content/uploads/2021/08/flouffy-VBkIK3qj3QE-unsplash-scaled-e1631077364762.jpg',
-  //     nickname: '멍뭉이2',
-  //   },
-  //   {
-  //     email: 'bsw@naver.com',
-  //     profile_url:
-  //       'https://img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/32E9/image/BA2Qyx3O2oTyEOsXe2ZtE8cRqGk.JPG',
-  //     nickname: '멍뭉이1',
-  //   },
-  // ];
   const userData = {
     email: userInfo.data.email.split('@')[0],
     profile_url: userInfo.data.profile_url,
@@ -199,48 +176,12 @@ export function RecommendFollow() {
         <h2>회원님을 위한 추천</h2>
         <Link href='/main'>모두 보기</Link>
       </TitleBox>
-      {recommendProfile.map((data: recommendUserListProps) => {
-        return <FollowList profile={data} />;
+      {recommendProfile.map((data: recommendUserListProps, index) => {
+        return <FollowList key={index} profile={data} />;
       })}
     </FollowArticle>
   );
 }
-
-const renderRecommendFollow = async (key: string, value: string[]) => {
-  let followerParagraph = '';
-  let recommendData = {
-    email: '',
-    profile_url: '',
-    paragraph: '',
-  };
-
-  // 0번째 팔로하는 user email 불러오기
-  const userEmailRef = doc(db, 'users', value[0]);
-  const userEmailSnapshot = await getDoc(userEmailRef);
-  if (userEmailSnapshot.exists()) {
-    const userEmailData = userEmailSnapshot.data() as User;
-    const userId = userEmailData.email.split('@')[0];
-    if (value.length === 1) followerParagraph = `${userId}님이 팔로우합니다`;
-    else `${userId}님 외 ${value.length - 1}명이 팔로우합니다`;
-  }
-
-  // 추천 팔로잉 data 불러오기
-  const recommendDataRef = doc(db, 'users', key);
-  const recommendDataSnapshot = await getDoc(recommendDataRef);
-  if (recommendDataSnapshot.exists()) {
-    const userData = recommendDataSnapshot.data() as User;
-
-    if (userData.email && userData.profile_url) {
-      recommendData = {
-        email: userData.email,
-        profile_url: userData.profile_url,
-        paragraph: followerParagraph,
-      };
-    }
-  }
-
-  return <FollowList profile={recommendData} />;
-};
 
 const FollowArticle = styled.section`
   width: 420px;
