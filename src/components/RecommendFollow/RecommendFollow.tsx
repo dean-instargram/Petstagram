@@ -152,7 +152,8 @@ export function RecommendFollow() {
       const newFollowingObject = { ...prevFollowingObject };
       followingList.forEach((followingUserUid) => {
         if (!newFollowingObject[followingUserUid]) {
-          newFollowingObject[followingUserUid] = [loginUserUid];
+          if (!userInfo.data.following.includes(followingUserUid))
+            newFollowingObject[followingUserUid] = [loginUserUid];
         } else {
           if (!newFollowingObject[followingUserUid].includes(loginUserUid)) {
             newFollowingObject[followingUserUid].push(loginUserUid);
