@@ -3,140 +3,146 @@ import { FollowList, UserList } from '@/components';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { state, userDataState } from '@/types/index';
+import { userUidState, userDataState } from '@/types/index';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase/app';
 import { User } from '@/components/InfiniteScroll/postList';
 
-interface FollowingObject {
+type RecommendFollows = {
   [followingUid: string]: string[];
-}
+};
 
-type recommendUserListProps = {
+type RecommendFollowProfile = {
   email: string;
   profile_url: string;
   paragraph: string;
 };
 
 export function RecommendFollow() {
-  const userUid = useSelector((state: state) => state.userUid.value);
+  const userUid = useSelector((state: userUidState) => state.userUid.value);
   const userInfo = useSelector((state: userDataState) => {
     const { isLoading, error, data } = state.userData;
     return { isLoading, error, data };
   });
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [follows, setFollows] = useState<string[]>();
-  const [followingObject, setFollowingObject] = useState<FollowingObject>({});
-  const [recommendFollowing, setRecommendFollowing] = useState<FollowingObject>(
+  const [loggedUserFollows, setLoggedUserFollows] = useState<string[]>();
+  const [recommendFollows, setRecommendFollows] = useState<RecommendFollows>(
     {}
   );
-  const [recommendProfile, setRecommendProfile] = useState<
-    recommendUserListProps[]
+  const [sortedRecommendFollows, setSortedRecommendFollows] =
+    useState<RecommendFollows>({});
+  const [recommendFollowsProfile, setRecommendFollowsProfile] = useState<
+    RecommendFollowProfile[]
   >([]);
 
   useEffect(() => {
-    if (follows != undefined) {
-      follows.forEach((uid) => {
-        getFollowingList(uid);
-      });
-    }
-  }, [follows]);
-
-  useEffect(() => {
-    if (!userInfo.isLoading && follows === undefined) {
-      setIsLoading(userInfo.isLoading);
-      setFollows([...userInfo.data.following]);
+    if (!userInfo.isLoading && loggedUserFollows === undefined) {
+      setLoggedUserFollows([...userInfo.data.following]);
     }
   }, [userInfo]);
 
   useEffect(() => {
-    if (followingObject != undefined) {
+    if (loggedUserFollows != undefined) {
+      loggedUserFollows.forEach((followUid) => {
+        getFollowingList(followUid);
+      });
+    }
+  }, [loggedUserFollows]);
+
+  useEffect(() => {
+    if (recommendFollows != undefined) {
       const sortedFollowList = Object.fromEntries(
-        Object.entries(followingObject).sort(
+        Object.entries(recommendFollows).sort(
           (a: [string, string[]], b: [string, string[]]): number => {
             return b[1].length - a[1].length;
           }
         )
       );
 
-      for (const [key, value] of Object.entries(sortedFollowList)) {
-        if (Object.keys(recommendFollowing).length >= 5) {
+      for (const [followUid, followerUids] of Object.entries(
+        sortedFollowList
+      )) {
+        if (Object.keys(sortedRecommendFollows).length >= 5) {
           break;
         }
-        setRecommendFollowing((prevRecommend) => {
-          const newRecommendFollowing = { ...prevRecommend };
-          newRecommendFollowing[key] = value;
-          return newRecommendFollowing;
+        setSortedRecommendFollows((prevSortedRecommend) => {
+          const newSortedRecommendFollows = { ...prevSortedRecommend };
+          newSortedRecommendFollows[followUid] = followerUids;
+          return newSortedRecommendFollows;
         });
       }
     }
-  }, [followingObject]);
+  }, [recommendFollows]);
 
   useEffect(() => {
-    const getRecommendData = async (key: string, value: string[]) => {
+    const getRecommendData = async (
+      followUid: string,
+      followerUids: string[]
+    ) => {
       let followerParagraph = '';
-      let recommendData = {
+      let recommendProfile = {
         email: '',
         profile_url: '',
         paragraph: '',
       };
 
       // 0번째 팔로하는 user email 불러오기
-      const userEmailRef = doc(db, 'users', value[0]);
+      const userEmailRef = doc(db, 'users', followerUids[0]);
       const userEmailSnapshot = await getDoc(userEmailRef);
       if (userEmailSnapshot.exists()) {
-        const userEmailData = userEmailSnapshot.data() as User;
-        const userId = userEmailData.email.split('@')[0];
-        if (value.length === 1)
-          followerParagraph = `${userId}님이 팔로우합니다`;
+        const firstFollowerEmail = userEmailSnapshot.data() as User;
+        const firstFollowerId = firstFollowerEmail.email.split('@')[0];
+        if (followerUids.length === 1)
+          followerParagraph = `${firstFollowerId}님이 팔로우합니다`;
         else
-          followerParagraph = `${userId}님 외 ${
-            value.length - 1
+          followerParagraph = `${firstFollowerId}님 외 ${
+            followerUids.length - 1
           }명이 팔로우합니다`;
       }
 
-      // 추천 팔로잉 data 불러오기
-      const recommendDataRef = doc(db, 'users', key);
+      // 추천 팔로우 data 불러오기
+      const recommendDataRef = doc(db, 'users', followUid);
       const recommendDataSnapshot = await getDoc(recommendDataRef);
       if (recommendDataSnapshot.exists()) {
         const userData = recommendDataSnapshot.data() as User;
-        recommendData = {
-          ...recommendData,
+        recommendProfile = {
+          ...recommendProfile,
           email: userData.email,
           profile_url: userData.profile_url,
           paragraph: followerParagraph,
         };
       }
 
-      setRecommendProfile((prevData) => {
+      setRecommendFollowsProfile((prevData) => {
         const newRecommendData = [...prevData];
 
+        // 추천팔로우 중복제거
         if (
           newRecommendData.some((cur) => {
-            return cur.email === recommendData.email;
+            return cur.email === recommendProfile.email;
           })
         ) {
           return newRecommendData;
         }
-        newRecommendData.push(recommendData);
+
+        newRecommendData.push(recommendProfile);
         return newRecommendData;
       });
     };
 
-    const initState = () => {
-      setRecommendProfile([]);
+    const initRecommendFollowsProfile = () => {
+      setRecommendFollowsProfile([]);
     };
 
     const startInit = async () => {
-      await initState();
+      await initRecommendFollowsProfile();
     };
 
     startInit();
-    Object.entries(recommendFollowing).map(([key, value]) => {
-      getRecommendData(key, value);
+    Object.entries(sortedRecommendFollows).map(([followUid, followerUids]) => {
+      getRecommendData(followUid, followerUids);
     });
-  }, [recommendFollowing]);
+  }, [sortedRecommendFollows]);
 
   const getFollowingList = async (uid: string) => {
     const userDataRef = doc(db, 'users', uid);
@@ -147,20 +153,20 @@ export function RecommendFollow() {
     }
   };
 
-  const pushFollowingList = (followingList: string[], loginUserUid: string) => {
-    setFollowingObject((prevFollowingObject) => {
-      const newFollowingObject = { ...prevFollowingObject };
-      followingList.forEach((followingUserUid) => {
-        if (!newFollowingObject[followingUserUid]) {
-          if (!userInfo.data.following.includes(followingUserUid))
-            newFollowingObject[followingUserUid] = [loginUserUid];
+  const pushFollowingList = (followingList: string[], followerUid: string) => {
+    setRecommendFollows((prevRecommendFollows) => {
+      const newRecommendFollows = { ...prevRecommendFollows };
+      followingList.forEach((followUid) => {
+        if (!newRecommendFollows[followUid]) {
+          if (!userInfo.data.following.includes(followUid))
+            newRecommendFollows[followUid] = [followerUid];
         } else {
-          if (!newFollowingObject[followingUserUid].includes(loginUserUid)) {
-            newFollowingObject[followingUserUid].push(loginUserUid);
+          if (!newRecommendFollows[followUid].includes(followerUid)) {
+            newRecommendFollows[followUid].push(followerUid);
           }
         }
       });
-      return newFollowingObject;
+      return newRecommendFollows;
     });
   };
 
@@ -177,7 +183,7 @@ export function RecommendFollow() {
         <h2>회원님을 위한 추천</h2>
         <Link href='/main'>모두 보기</Link>
       </TitleBox>
-      {recommendProfile.map((data: recommendUserListProps, index) => {
+      {recommendFollowsProfile.map((data: RecommendFollowProfile, index) => {
         return <FollowList key={index} profile={data} />;
       })}
     </FollowArticle>

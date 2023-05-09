@@ -1,6 +1,6 @@
 import { User } from '@/components/InfiniteScroll/postList';
 
-export interface state {
+export interface userUidState {
   userUid: { value: string };
 }
 

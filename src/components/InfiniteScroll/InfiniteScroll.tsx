@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Post, User } from './postList';
 import { PostCard } from '@/components';
-import { state, userDataState } from '@/types/index';
+import { userUidState, userDataState } from '@/types/index';
 
 import {
   collection,
@@ -21,19 +21,24 @@ let lastVisible: any = undefined;
 let isFirst = true;
 
 export function InfiniteScroll(): JSX.Element {
-  const userUid = useSelector((state: state) => state.userUid.value);
+  const userUid = useSelector((state: userUidState) => state.userUid.value);
   const userInfo = useSelector((state: userDataState) => {
     const { isLoading, error, data } = state.userData;
     return { isLoading, error, data };
   });
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userError, setUserError] = useState<boolean>(false);
   const [userData, setUserData] = useState<User>();
-
   const [posts, setPosts] = useState<Post[]>([]);
   const [follows, setFollows] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (!userInfo.isLoading && userData === undefined) {
+      setUserData(userInfo.data);
+      setFollows([userUid, ...userInfo.data.following]);
+    }
+  }, [userInfo]);
+
+  // 게시물 첫 렌더링(스크롤 없이)
   useEffect(() => {
     if (follows.length != 0 && isFirst) {
       getNextPosts();
@@ -41,18 +46,10 @@ export function InfiniteScroll(): JSX.Element {
     }
   }, [follows]);
 
-  useEffect(() => {
-    if (!userInfo.isLoading && userData === undefined) {
-      setIsLoading(userInfo.isLoading);
-      setUserData(userInfo.data);
-      setUserError(userInfo.error);
-      setFollows([userUid, ...userInfo.data.following]);
-    }
-  }, [userInfo]);
-
   const getNextPosts = () => {
     let q;
     if (lastVisible === -1) {
+      // 더 이상 데이터가 없을 때
       alert('마지막 입니다~');
       return;
     } else if (lastVisible) {
@@ -107,12 +104,12 @@ export function InfiniteScroll(): JSX.Element {
   }, [posts, follows]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, true);
     // 스크롤이 발생할때마다 handleScroll 함수를 호출하도록 추가
+    window.addEventListener('scroll', handleScroll, true);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll, true);
       // 해당 컴포넌트가 언마운트 될때, 스크롤 이벤트를 제거
+      window.removeEventListener('scroll', handleScroll, true);
     };
   }, [handleScroll, posts]);
 
@@ -124,8 +121,6 @@ export function InfiniteScroll(): JSX.Element {
     </Container>
   );
 }
-
-export default InfiniteScroll;
 
 const Container = styled.div`
   width: 100%;

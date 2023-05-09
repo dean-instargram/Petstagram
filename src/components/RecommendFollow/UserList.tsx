@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import baseProfile from '@/public/profile.jpg';
 
-type UserListProps = {
+type UserProfileProps = {
   profile: { email: string; profile_url: string; paragraph: string };
 };
 
-export function UserList({ profile }: UserListProps) {
+export function UserList({ profile }: UserProfileProps) {
   const user_id = profile.email.split('@')[0];
   return (
     <ListBox>
