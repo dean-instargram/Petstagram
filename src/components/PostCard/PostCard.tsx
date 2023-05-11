@@ -4,8 +4,13 @@ import styled from 'styled-components';
 import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
 import { Post, User, CreateAtType } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
+
 import baseProfile from '@/public/profile.jpg';
 import moreVertical from '@/public/icons/PostCard/moreVertical.png';
+import heart from '@/public/icons/PostCard/heart.png';
+import comment from '@/public/icons/PostCard/comment.png';
+import send from '@/public/icons/PostCard/send.png';
+import bookmark from '@/public/icons/PostCard/bookmark.png';
 import Image from 'next/image';
 
 interface PostCardProps {
@@ -88,22 +93,38 @@ export function PostCard({ post }: PostCardProps) {
             <ProfileId>{postUserId}</ProfileId>
             <PostDate>{postDateP}</PostDate>
           </StyledDiv>
-          <MoreButton>
+          <IconButton>
             <Image
               src={moreVertical}
               alt='더보기'
               width={27}
               height={27}
             ></Image>
-          </MoreButton>
+          </IconButton>
         </HeaderSection>
         <ImageSwiper images={images} />
-        <FlexRow>
-          <button>좋아요</button>
-          <button>댓글</button>
-          <button>메세지</button>
-          <button>게시물저장</button>
-        </FlexRow>
+        <IconSection>
+          <FlexRow>
+            <IconButton>
+              <Image src={heart} alt='좋아요' width={40} height={40}></Image>
+            </IconButton>
+            <IconButton>
+              <Image src={comment} alt='댓글' width={40} height={40}></Image>
+            </IconButton>
+            <IconButton>
+              <Image src={send} alt='개인메세지' width={40} height={40}></Image>
+            </IconButton>
+          </FlexRow>
+
+          <IconButton>
+            <Image
+              src={bookmark}
+              alt='게시물저장'
+              width={40}
+              height={40}
+            ></Image>
+          </IconButton>
+        </IconSection>
         <CommentSection>
           <FlexRow>
             <Link href='/main' passHref>
@@ -125,8 +146,8 @@ export function PostCard({ post }: PostCardProps) {
             </Link>
             <p>{post.content}</p>
           </FlexRow>
-          <MoreButton>더 보기</MoreButton>
-          <MoreButton>댓글 {post.comment.length}개 모두 보기</MoreButton>
+          <IconButton>더 보기</IconButton>
+          <IconButton>댓글 {post.comment.length}개 모두 보기</IconButton>
           {post.comment.map((data) => {
             return (
               <>
@@ -233,7 +254,7 @@ const StyledImage = styled(Image)`
   border-radius: 50%;
 `;
 
-const MoreButton = styled.button`
+const IconButton = styled.button`
   all: unset;
   cursor: pointer;
 `;
@@ -241,6 +262,12 @@ const MoreButton = styled.button`
 const CommentSection = styled.section`
   display: flex;
   flex-flow: column nowrap;
+`;
+
+const IconSection = styled.section`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 `;
 
 const FlexRow = styled.div`
