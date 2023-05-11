@@ -5,7 +5,7 @@ import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
 import { Post, User, CreateAtType } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
 import baseProfile from '@/public/profile.jpg';
-import moreVertical from '@/public/images/main/moreVertical.png';
+import moreVertical from '@/public/icons/PostCard/moreVertical.png';
 import Image from 'next/image';
 
 interface PostCardProps {
