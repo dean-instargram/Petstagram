@@ -5,6 +5,7 @@ import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
 import { Post, User, CreateAtType } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
 import baseProfile from '@/public/profile.jpg';
+import moreVertical from '@/public/images/main/moreVertical.png';
 import Image from 'next/image';
 
 interface PostCardProps {
@@ -82,10 +83,19 @@ export function PostCard({ post }: PostCardProps) {
     <>
       <Article>
         <HeaderSection>
-          <ProfileButton>{renderProfile(postUserData)}</ProfileButton>
-          <p>{postUserId}</p>
-          <p>{postDateP}</p>
-          <MoreButton>...</MoreButton>
+          <StyledDiv>
+            <ProfileButton>{renderProfile(postUserData)}</ProfileButton>
+            <ProfileId>{postUserId}</ProfileId>
+            <PostDate>{postDateP}</PostDate>
+          </StyledDiv>
+          <MoreButton>
+            <Image
+              src={moreVertical}
+              alt='더보기'
+              width={27}
+              height={27}
+            ></Image>
+          </MoreButton>
         </HeaderSection>
         <ImageSwiper images={images} />
         <FlexRow>
@@ -173,19 +183,29 @@ const renderProfile = (postUserData: User | undefined) => {
 };
 
 const Article = styled.article`
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
   border: 1px solid black;
   display: flex;
   flex-flow: column nowrap;
   max-width: 614px;
-  margin-bottom: 20px;
 `;
 
 const HeaderSection = styled.section`
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  margin: 15px 0 15px 0;
+
+  p {
+    margin-right: 8px;
+  }
+`;
+
+const StyledDiv = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
 `;
 
 const ProfileButton = styled.button`
@@ -193,6 +213,17 @@ const ProfileButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  margin-right: 8px;
+`;
+
+const ProfileId = styled.p`
+  font-size: 12px;
+  font-weight: 600;
+`;
+
+const PostDate = styled.p`
+  font-size: 12px;
+  font-weight: 400;
 `;
 
 const StyledImage = styled(Image)`
@@ -203,7 +234,7 @@ const StyledImage = styled(Image)`
 `;
 
 const MoreButton = styled.button`
-  color: gray;
+  all: unset;
   cursor: pointer;
 `;
 
