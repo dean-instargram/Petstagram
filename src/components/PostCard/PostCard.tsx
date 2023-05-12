@@ -11,7 +11,9 @@ import heart from '@/public/icons/PostCard/heart.png';
 import comment from '@/public/icons/PostCard/comment.png';
 import send from '@/public/icons/PostCard/send.png';
 import bookmark from '@/public/icons/PostCard/bookmark.png';
+import imoge from '@/public/icons/PostCard/imoge.svg';
 import Image from 'next/image';
+import { getColor } from '@/theme/utils';
 
 interface PostCardProps {
   post: Post;
@@ -115,7 +117,6 @@ export function PostCard({ post }: PostCardProps) {
               <Image src={send} alt='개인메세지' width={40} height={40}></Image>
             </IconButton>
           </FlexRow>
-
           <IconButton>
             <Image
               src={bookmark}
@@ -126,45 +127,53 @@ export function PostCard({ post }: PostCardProps) {
           </IconButton>
         </IconSection>
         <CommentSection>
-          <FlexRow>
-            <Link href='/main' passHref>
+          <LikeList>
+            <InitialLink href='/main' passHref>
               <IdLink>
                 {likeEmail[0] ? likeEmail[0].split('@')[0] : null}
               </IdLink>
-            </Link>
+            </InitialLink>
             {likeEmail.length > 1 ? (
               <p>
-                님 외 <strong>{likeEmail.length - 1}</strong>명이 좋아합니다
+                님 외 <strong>{likeEmail.length - 1}</strong> 명이 좋아합니다
               </p>
             ) : (
               <p>님이 좋아합니다</p>
             )}
-          </FlexRow>
+          </LikeList>
           <FlexRow>
-            <Link href='/main' passHref>
+            <InitialLink href='/main' passHref>
               <IdLink>{postUserId}</IdLink>
-            </Link>
+            </InitialLink>
             <p>{post.content}</p>
           </FlexRow>
-          <IconButton>더 보기</IconButton>
-          <IconButton>댓글 {post.comment.length}개 모두 보기</IconButton>
+          <MoreButton color={getColor('Grey/grey-700')}>더 보기</MoreButton>
+          <MoreCommentButton color={getColor('Grey/grey-700')}>
+            댓글 {post.comment.length}개 모두 보기
+          </MoreCommentButton>
           {post.comment.map((data) => {
             return (
               <>
                 <FlexRow>
-                  <Link href='/main' passHref>
+                  <InitialLink href='/main' passHref>
                     <IdLink>{data.email.split('@')[0]}</IdLink>
-                  </Link>
+                  </InitialLink>
                   <p>{data.content}</p>
                 </FlexRow>
                 {data.recomment.length != 0
                   ? data.recomment.map((recomment) => {
                       return (
                         <FlexRow>
-                          <p>@{data.email.split('@')[0]} </p>
-                          <Link href='/main' passHref>
+                          <InitialLink href='/main' passHref>
                             <IdLink>{recomment.email.split('@')[0]}</IdLink>
-                          </Link>
+                          </InitialLink>
+                          <RecommentLink
+                            href='/main'
+                            passHref
+                            color={getColor('blue/blue-300')}
+                          >
+                            <IdLink>@{data.email.split('@')[0]}</IdLink>
+                          </RecommentLink>
                           <p>{recomment.content}</p>
                         </FlexRow>
                       );
@@ -173,8 +182,24 @@ export function PostCard({ post }: PostCardProps) {
               </>
             );
           })}
-          <input type='text' placeholder='댓글 달기...'></input>
-          <button>이모티콘</button>
+          <FlexRow>
+            <CommentInput
+              type='text'
+              placeholder='댓글 달기...'
+              color={getColor('Grey/grey-700')}
+            ></CommentInput>
+            <AddCommentButton color={getColor('point color')}>
+              게시
+            </AddCommentButton>
+            <IconButton>
+              <Image
+                src={imoge}
+                alt='이모티콘'
+                width={18.5}
+                height={18.5}
+              ></Image>
+            </IconButton>
+          </FlexRow>
         </CommentSection>
       </Article>
     </>
@@ -205,7 +230,6 @@ const renderProfile = (postUserData: User | undefined) => {
 
 const Article = styled.article`
   margin: 0 auto 20px auto;
-  border: 1px solid black;
   display: flex;
   flex-flow: column nowrap;
   max-width: 614px;
@@ -259,9 +283,43 @@ const IconButton = styled.button`
   cursor: pointer;
 `;
 
+const MoreButton = styled.button<{ color: string }>`
+  all: unset;
+  cursor: pointer;
+  margin-top: 9px;
+  color: ${(props) => props.color};
+  font-weight: 500;
+`;
+
+const MoreCommentButton = styled.button<{ color: string }>`
+  all: unset;
+  cursor: pointer;
+  margin: 16px 0;
+  color: ${(props) => props.color};
+  font-weight: 500;
+`;
+
 const CommentSection = styled.section`
   display: flex;
   flex-flow: column nowrap;
+`;
+
+const CommentInput = styled.input<{ color: string }>`
+  width: 100%;
+  border: none;
+  cursor: text;
+  overflow: visible;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+
+  margin-top: 16px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  color: ${(props) => props.color};
+  font-weight: 500;
 `;
 
 const IconSection = styled.section`
@@ -272,8 +330,34 @@ const IconSection = styled.section`
 
 const FlexRow = styled.div`
   display: flex;
+  gap: 8px;
+  align-items: center;
 `;
 
-const IdLink = styled.a`
-  font-weight: 600;
+const LikeList = styled.div`
+  display: flex;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  gap: 6px;
 `;
+
+const InitialLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  margin-bottom: 4px;
+`;
+
+const AddCommentButton = styled(IconButton)<{ color: string }>`
+  white-space: nowrap;
+  color: ${(props) => props.color};
+  font-size: 15px;
+  font-weight: 700;
+`;
+
+const RecommentLink = styled(Link)<{ color: string }>`
+  text-decoration: none;
+  color: ${(props) => props.color};
+`;
+
+const IdLink = styled.a``;
