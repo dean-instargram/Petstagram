@@ -1,12 +1,12 @@
+import * as S from './PostCard.styled';
+
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import styled from 'styled-components';
 import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
 import { Post, User, CreateAtType } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
+import { PostHeader } from './PostHeader';
 
 import baseProfile from '@/public/profile.jpg';
-import moreVertical from '@/public/icons/PostCard/moreVertical.png';
 import heart from '@/public/icons/PostCard/heart.png';
 import comment from '@/public/icons/PostCard/comment.png';
 import send from '@/public/icons/PostCard/send.png';
@@ -68,7 +68,7 @@ export function PostCard({ post }: PostCardProps) {
       const betweenTime = Math.floor(diff / time.milliSeconds);
 
       if (betweenTime > 0) {
-        return `${betweenTime}${time.name} 전`;
+        return `${betweenTime}${time.name}`;
       }
     }
 
@@ -88,51 +88,43 @@ export function PostCard({ post }: PostCardProps) {
 
   return (
     <>
-      <Article>
-        <HeaderSection>
-          <StyledDiv>
-            <ProfileButton>{renderProfile(postUserData)}</ProfileButton>
-            <ProfileId>{postUserId}</ProfileId>
-            <PostDate>{postDateP}</PostDate>
-          </StyledDiv>
-          <IconButton>
-            <Image
-              src={moreVertical}
-              alt='더보기'
-              width={27}
-              height={27}
-            ></Image>
-          </IconButton>
-        </HeaderSection>
+      <S.Article>
+        <PostHeader
+          props={{
+            postUserData,
+            postUserId,
+            postDateP,
+          }}
+        ></PostHeader>
         <ImageSwiper images={images} />
-        <IconSection>
-          <FlexRow>
-            <IconButton>
+        <S.IconSection>
+          <S.FlexRow>
+            <S.IconButton>
               <Image src={heart} alt='좋아요' width={40} height={40}></Image>
-            </IconButton>
-            <IconButton>
+            </S.IconButton>
+            <S.IconButton>
               <Image src={comment} alt='댓글' width={40} height={40}></Image>
-            </IconButton>
-            <IconButton>
+            </S.IconButton>
+            <S.IconButton>
               <Image src={send} alt='개인메세지' width={40} height={40}></Image>
-            </IconButton>
-          </FlexRow>
-          <IconButton>
+            </S.IconButton>
+          </S.FlexRow>
+          <S.IconButton>
             <Image
               src={bookmark}
               alt='게시물저장'
               width={40}
               height={40}
             ></Image>
-          </IconButton>
-        </IconSection>
-        <CommentSection>
-          <LikeList>
-            <InitialLink href='/main' passHref>
-              <IdLink>
+          </S.IconButton>
+        </S.IconSection>
+        <S.CommentSection>
+          <S.LikeList>
+            <S.InitialLink href='/main' passHref>
+              <S.IdLink>
                 {likeEmail[0] ? likeEmail[0].split('@')[0] : null}
-              </IdLink>
-            </InitialLink>
+              </S.IdLink>
+            </S.InitialLink>
             {likeEmail.length > 1 ? (
               <p>
                 님 외 <strong>{likeEmail.length - 1}</strong> 명이 좋아합니다
@@ -140,68 +132,68 @@ export function PostCard({ post }: PostCardProps) {
             ) : (
               <p>님이 좋아합니다</p>
             )}
-          </LikeList>
-          <FlexRow>
-            <InitialLink href='/main' passHref>
-              <IdLink>{postUserId}</IdLink>
-            </InitialLink>
+          </S.LikeList>
+          <S.FlexRow>
+            <S.InitialLink href='/main' passHref>
+              <S.IdLink>{postUserId}</S.IdLink>
+            </S.InitialLink>
             <p>{post.content}</p>
-          </FlexRow>
-          <MoreButton color={getColor('Grey/grey-700')}>더 보기</MoreButton>
-          <MoreCommentButton color={getColor('Grey/grey-700')}>
+          </S.FlexRow>
+          <S.MoreButton color={getColor('Grey/grey-700')}>더 보기</S.MoreButton>
+          <S.MoreCommentButton color={getColor('Grey/grey-700')}>
             댓글 {post.comment.length}개 모두 보기
-          </MoreCommentButton>
+          </S.MoreCommentButton>
           {post.comment.map((data) => {
             return (
               <>
-                <FlexRow>
-                  <InitialLink href='/main' passHref>
-                    <IdLink>{data.email.split('@')[0]}</IdLink>
-                  </InitialLink>
+                <S.FlexRow>
+                  <S.InitialLink href='/main' passHref>
+                    <S.IdLink>{data.email.split('@')[0]}</S.IdLink>
+                  </S.InitialLink>
                   <p>{data.content}</p>
-                </FlexRow>
+                </S.FlexRow>
                 {data.recomment.length != 0
                   ? data.recomment.map((recomment) => {
                       return (
-                        <FlexRow>
-                          <InitialLink href='/main' passHref>
-                            <IdLink>{recomment.email.split('@')[0]}</IdLink>
-                          </InitialLink>
-                          <RecommentLink
+                        <S.FlexRow>
+                          <S.InitialLink href='/main' passHref>
+                            <S.IdLink>{recomment.email.split('@')[0]}</S.IdLink>
+                          </S.InitialLink>
+                          <S.RecommentLink
                             href='/main'
                             passHref
                             color={getColor('blue/blue-300')}
                           >
-                            <IdLink>@{data.email.split('@')[0]}</IdLink>
-                          </RecommentLink>
+                            <S.IdLink>@{data.email.split('@')[0]}</S.IdLink>
+                          </S.RecommentLink>
                           <p>{recomment.content}</p>
-                        </FlexRow>
+                        </S.FlexRow>
                       );
                     })
                   : null}
               </>
             );
           })}
-          <FlexRow>
-            <CommentInput
+          <S.FlexRow>
+            <S.CommentInput
               type='text'
               placeholder='댓글 달기...'
               color={getColor('Grey/grey-700')}
-            ></CommentInput>
-            <AddCommentButton color={getColor('point color')}>
+            ></S.CommentInput>
+            <S.AddCommentButton color={getColor('point color')}>
               게시
-            </AddCommentButton>
-            <IconButton>
+            </S.AddCommentButton>
+            <S.IconButton>
               <Image
                 src={imoge}
                 alt='이모티콘'
                 width={18.5}
                 height={18.5}
               ></Image>
-            </IconButton>
-          </FlexRow>
-        </CommentSection>
-      </Article>
+            </S.IconButton>
+          </S.FlexRow>
+        </S.CommentSection>
+      </S.Article>
     </>
   );
 }
@@ -213,7 +205,7 @@ const renderProfile = (postUserData: User | undefined) => {
     postUserData.profile_url != ''
   ) {
     return (
-      <StyledImage
+      <S.StyledImage
         src={postUserData.profile_url}
         alt='프로필 사진'
         width={100}
@@ -224,140 +216,11 @@ const renderProfile = (postUserData: User | undefined) => {
   }
 
   return (
-    <StyledImage src={baseProfile} alt='프로필 사진' width={100} height={100} />
+    <S.StyledImage
+      src={baseProfile}
+      alt='프로필 사진'
+      width={100}
+      height={100}
+    />
   );
 };
-
-const Article = styled.article`
-  margin: 0 auto 20px auto;
-  display: flex;
-  flex-flow: column nowrap;
-  max-width: 614px;
-`;
-
-const HeaderSection = styled.section`
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-between;
-  margin: 15px 0 15px 0;
-
-  p {
-    margin-right: 8px;
-  }
-`;
-
-const StyledDiv = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-`;
-
-const ProfileButton = styled.button`
-  all: unset;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 8px;
-`;
-
-const ProfileId = styled.p`
-  font-size: 12px;
-  font-weight: 600;
-`;
-
-const PostDate = styled.p`
-  font-size: 12px;
-  font-weight: 400;
-`;
-
-const StyledImage = styled(Image)`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-`;
-
-const IconButton = styled.button`
-  all: unset;
-  cursor: pointer;
-`;
-
-const MoreButton = styled.button<{ color: string }>`
-  all: unset;
-  cursor: pointer;
-  margin-top: 9px;
-  color: ${(props) => props.color};
-  font-weight: 500;
-`;
-
-const MoreCommentButton = styled.button<{ color: string }>`
-  all: unset;
-  cursor: pointer;
-  margin: 16px 0;
-  color: ${(props) => props.color};
-  font-weight: 500;
-`;
-
-const CommentSection = styled.section`
-  display: flex;
-  flex-flow: column nowrap;
-`;
-
-const CommentInput = styled.input<{ color: string }>`
-  width: 100%;
-  border: none;
-  cursor: text;
-  overflow: visible;
-  -ms-user-select: none;
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-
-  margin-top: 16px;
-  margin-bottom: 20px;
-  font-size: 15px;
-  color: ${(props) => props.color};
-  font-weight: 500;
-`;
-
-const IconSection = styled.section`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-`;
-
-const FlexRow = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-`;
-
-const LikeList = styled.div`
-  display: flex;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  gap: 6px;
-`;
-
-const InitialLink = styled(Link)`
-  text-decoration: none;
-  color: black;
-  font-weight: 600;
-  margin-bottom: 4px;
-`;
-
-const AddCommentButton = styled(IconButton)<{ color: string }>`
-  white-space: nowrap;
-  color: ${(props) => props.color};
-  font-size: 15px;
-  font-weight: 700;
-`;
-
-const RecommentLink = styled(Link)<{ color: string }>`
-  text-decoration: none;
-  color: ${(props) => props.color};
-`;
-
-const IdLink = styled.a``;
