@@ -10,10 +10,9 @@ import {
   DetailCommentUnit,
   PostIcon,
   LikeList,
+  AddComment,
 } from '@/components/index';
 
-import imoge from '@/public/icons/PostCard/imoge.svg';
-import Image from 'next/image';
 import { getColor } from '@/theme/utils';
 import { isCreateAtType, caculateTime } from '@/utils/mainUtil';
 
@@ -66,7 +65,7 @@ export function PostCard({ post }: PostCardProps) {
         <ImageSwiper images={images} />
         <PostIcon />
         <S.CommentSection>
-          <LikeList likeEmail={likeEmail}></LikeList>
+          <LikeList likeEmail={likeEmail} />
           <S.FlexRow>
             <S.InitialLink href='/main' passHref>
               <S.IdLink>{postUserId}</S.IdLink>
@@ -104,24 +103,7 @@ export function PostCard({ post }: PostCardProps) {
               </>
             );
           })}
-          <S.FlexRow>
-            <S.CommentInput
-              type='text'
-              placeholder='댓글 달기...'
-              color={getColor('Grey/grey-700')}
-            ></S.CommentInput>
-            <S.AddCommentButton color={getColor('point color')}>
-              게시
-            </S.AddCommentButton>
-            <S.IconButton>
-              <Image
-                src={imoge}
-                alt='이모티콘'
-                width={18.5}
-                height={18.5}
-              ></Image>
-            </S.IconButton>
-          </S.FlexRow>
+          <AddComment />
         </S.CommentSection>
       </S.Article>
     </>
