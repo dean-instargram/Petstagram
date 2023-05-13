@@ -2,11 +2,14 @@ import * as S from './PostCard.styled';
 
 import React, { useEffect, useState } from 'react';
 import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
-import { Post, User, CreateAtType } from '@/components/InfiniteScroll/postList';
+import { Post, User } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
-import { PostHeader } from './PostHeader';
+import {
+  PostHeader,
+  SimpleCommentUnit,
+  DetailCommentUnit,
+} from '@/components/index';
 
-import baseProfile from '@/public/profile.jpg';
 import heart from '@/public/icons/PostCard/heart.png';
 import comment from '@/public/icons/PostCard/comment.png';
 import send from '@/public/icons/PostCard/send.png';
@@ -14,18 +17,10 @@ import bookmark from '@/public/icons/PostCard/bookmark.png';
 import imoge from '@/public/icons/PostCard/imoge.svg';
 import Image from 'next/image';
 import { getColor } from '@/theme/utils';
+import { isCreateAtType, caculateTime } from '@/utils/mainUtil';
 
 interface PostCardProps {
   post: Post;
-}
-
-function isCreateAtType(value: any): value is CreateAtType {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'seconds' in value &&
-    'nanoseconds' in value
-  );
 }
 
 export function PostCard({ post }: PostCardProps) {
@@ -35,7 +30,6 @@ export function PostCard({ post }: PostCardProps) {
   const images = post.images;
   const postUserId = postUserData?.email.split('@')[0];
 
-  // post 주인의 userData 불러오기
   const getUserData = async () => {
     if (!postUserData) {
       const result = (await getData('users', post.user_uid)) as User;
@@ -48,31 +42,6 @@ export function PostCard({ post }: PostCardProps) {
       const result = (await getData('users', uid)) as User;
       if (result) setLikeEmail((likeEmail) => [...likeEmail, result.email]);
     }
-  };
-
-  const caculateTime = (date: number): string => {
-    const postDate = date;
-    const nowDate = Math.round(Date.now() / 1000);
-
-    const diff = nowDate - postDate;
-
-    const times = [
-      { name: '년', milliSeconds: 60 * 60 * 24 * 365 },
-      { name: '개월', milliSeconds: 60 * 60 * 24 * 30 },
-      { name: '일', milliSeconds: 60 * 60 * 24 },
-      { name: '시간', milliSeconds: 60 * 60 },
-      { name: '분', milliSeconds: 60 },
-    ];
-
-    for (const time of times) {
-      const betweenTime = Math.floor(diff / time.milliSeconds);
-
-      if (betweenTime > 0) {
-        return `${betweenTime}${time.name}`;
-      }
-    }
-
-    return '방금 전';
   };
 
   useEffect(() => {
@@ -146,12 +115,7 @@ export function PostCard({ post }: PostCardProps) {
           {post.comment.map((data) => {
             return (
               <>
-                <S.FlexRow>
-                  <S.InitialLink href='/main' passHref>
-                    <S.IdLink>{data.email.split('@')[0]}</S.IdLink>
-                  </S.InitialLink>
-                  <p>{data.content}</p>
-                </S.FlexRow>
+                <SimpleCommentUnit data={data}></SimpleCommentUnit>
                 {data.recomment.length != 0
                   ? data.recomment.map((recomment) => {
                       return (
@@ -197,30 +161,3 @@ export function PostCard({ post }: PostCardProps) {
     </>
   );
 }
-
-const renderProfile = (postUserData: User | undefined) => {
-  if (
-    postUserData &&
-    postUserData.profile_url &&
-    postUserData.profile_url != ''
-  ) {
-    return (
-      <S.StyledImage
-        src={postUserData.profile_url}
-        alt='프로필 사진'
-        width={100}
-        height={100}
-        unoptimized
-      />
-    );
-  }
-
-  return (
-    <S.StyledImage
-      src={baseProfile}
-      alt='프로필 사진'
-      width={100}
-      height={100}
-    />
-  );
-};

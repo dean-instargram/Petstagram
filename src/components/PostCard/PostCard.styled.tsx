@@ -40,7 +40,7 @@ export const ProfileId = styled.p`
   font-weight: 600;
 `;
 
-export const PostDate = styled.p`
+export const PostDate = styled.time`
   font-size: 12px;
   font-weight: 400;
 `;
