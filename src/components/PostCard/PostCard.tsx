@@ -9,6 +9,7 @@ import {
   SimpleCommentUnit,
   DetailCommentUnit,
   PostIcon,
+  LikeList,
 } from '@/components/index';
 
 import imoge from '@/public/icons/PostCard/imoge.svg';
@@ -65,20 +66,7 @@ export function PostCard({ post }: PostCardProps) {
         <ImageSwiper images={images} />
         <PostIcon />
         <S.CommentSection>
-          <S.LikeList>
-            <S.InitialLink href='/main' passHref>
-              <S.IdLink>
-                {likeEmail[0] ? likeEmail[0].split('@')[0] : null}
-              </S.IdLink>
-            </S.InitialLink>
-            {likeEmail.length > 1 ? (
-              <p>
-                님 외 <strong>{likeEmail.length - 1}</strong> 명이 좋아합니다
-              </p>
-            ) : (
-              <p>님이 좋아합니다</p>
-            )}
-          </S.LikeList>
+          <LikeList likeEmail={likeEmail}></LikeList>
           <S.FlexRow>
             <S.InitialLink href='/main' passHref>
               <S.IdLink>{postUserId}</S.IdLink>
