@@ -8,12 +8,9 @@ import {
   PostHeader,
   SimpleCommentUnit,
   DetailCommentUnit,
+  PostIcon,
 } from '@/components/index';
 
-import heart from '@/public/icons/PostCard/heart.png';
-import comment from '@/public/icons/PostCard/comment.png';
-import send from '@/public/icons/PostCard/send.png';
-import bookmark from '@/public/icons/PostCard/bookmark.png';
 import imoge from '@/public/icons/PostCard/imoge.svg';
 import Image from 'next/image';
 import { getColor } from '@/theme/utils';
@@ -66,27 +63,7 @@ export function PostCard({ post }: PostCardProps) {
           }}
         ></PostHeader>
         <ImageSwiper images={images} />
-        <S.IconSection>
-          <S.FlexRow>
-            <S.IconButton>
-              <Image src={heart} alt='좋아요' width={40} height={40}></Image>
-            </S.IconButton>
-            <S.IconButton>
-              <Image src={comment} alt='댓글' width={40} height={40}></Image>
-            </S.IconButton>
-            <S.IconButton>
-              <Image src={send} alt='개인메세지' width={40} height={40}></Image>
-            </S.IconButton>
-          </S.FlexRow>
-          <S.IconButton>
-            <Image
-              src={bookmark}
-              alt='게시물저장'
-              width={40}
-              height={40}
-            ></Image>
-          </S.IconButton>
-        </S.IconSection>
+        <PostIcon />
         <S.CommentSection>
           <S.LikeList>
             <S.InitialLink href='/main' passHref>
