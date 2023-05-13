@@ -7,11 +7,11 @@ interface SimpleCommentUnitProps {
 
 export function SimpleCommentUnit({ data }: SimpleCommentUnitProps) {
   return (
-    <S.FlexRow>
+    <S.Comment>
       <S.InitialLink href='/main' passHref>
         <S.IdLink>{data.email.split('@')[0]}</S.IdLink>
       </S.InitialLink>
       <p>{data.content}</p>
-    </S.FlexRow>
+    </S.Comment>
   );
 }

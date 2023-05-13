@@ -51,6 +51,11 @@ export function DetailCommentUnit({ data }: DetailCommentUnitProps) {
           <CommentDate color={getColor('Grey/grey-600')}>
             {commentDateP}
           </CommentDate>
+          {data.like.length !== 0 ? (
+            <RecommentButton color={getColor('Grey/grey-600')}>
+              좋아요 {data.like.length}개
+            </RecommentButton>
+          ) : null}
           <RecommentButton color={getColor('Grey/grey-600')}>
             답글 달기
           </RecommentButton>

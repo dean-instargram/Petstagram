@@ -115,6 +115,7 @@ export function PostCard({ post }: PostCardProps) {
           {post.comment.map((data) => {
             return (
               <>
+                {/* <DetailCommentUnit data={data}></DetailCommentUnit> */}
                 <SimpleCommentUnit data={data}></SimpleCommentUnit>
                 {data.recomment.length != 0
                   ? data.recomment.map((recomment) => {

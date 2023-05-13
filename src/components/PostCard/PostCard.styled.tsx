@@ -33,6 +33,7 @@ export const ProfileButton = styled.button`
   height: 40px;
   border-radius: 50%;
   margin-right: 8px;
+  flex-shrink: 0;
 `;
 
 export const ProfileId = styled.p`
@@ -105,7 +106,10 @@ export const IconSection = styled.section`
 export const FlexRow = styled.div`
   display: flex;
   gap: 8px;
-  align-items: center;
+`;
+
+export const Comment = styled(FlexRow)`
+  margin-bottom: 4px;
 `;
 
 export const LikeList = styled.div`
