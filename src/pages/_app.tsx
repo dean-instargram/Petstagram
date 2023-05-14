@@ -20,7 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Provider store={store}>
         <GlobalStyles />
-        <Navigate />
+        {/* <Navigate /> */}
         {render ? (
           <>
             <LoginCheck />

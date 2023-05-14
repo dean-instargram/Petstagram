@@ -1,10 +1,9 @@
-import { RecommendFollow, InfiniteScroll } from '@/components';
+import { RecommendFollow, InfiniteScroll, MenuBar } from '@/components';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { getUserData } from '@/redux/userData';
 import { userUidState, userDataState } from '@/types/index';
-import { getColor } from '@/theme/utils';
 
 export default function Main() {
   const dispatch = useDispatch();
@@ -23,9 +22,7 @@ export default function Main() {
 
   return (
     <MainContainer>
-      <MenuSection bgColor={getColor('primary Yellow/primary yellow-100')}>
-        메뉴바
-      </MenuSection>
+      <MenuBar></MenuBar>
       <PostSection>
         <h2 className='a11y-hidden'>게시물</h2>
         <InfiniteScroll />
@@ -38,16 +35,10 @@ export default function Main() {
 
 const MainContainer = styled.div`
   display: flex;
-  /* justify-content: space-between; */
-`;
-
-const MenuSection = styled.section<{ bgColor: string }>`
-  background-color: ${(props) => props.bgColor};
-  width: 20%;
-  margin-right: 14.14479%;
 `;
 
 const PostSection = styled.section`
   display: flex;
   flex-flow: column nowrap;
+  padding-left: 32.473958%;
 `;

@@ -1,3 +1,4 @@
+export * from './MenuBar/MenuBar';
 export * from './PostCard/PostCard';
 export * from './PostCard/PostHeader';
 export * from './PostCard/PostIcon';
