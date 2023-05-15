@@ -1,9 +1,4 @@
-import {
-  RecommendFollow,
-  InfiniteScroll,
-  MenuBar,
-  MenuBarTablet,
-} from '@/components';
+import { RecommendFollow, InfiniteScroll, MenuBar } from '@/components';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';

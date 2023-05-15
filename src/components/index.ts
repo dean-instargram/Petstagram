@@ -1,5 +1,4 @@
 export * from './MenuBar/MenuBar';
-export * from './MenuBar/MenuBarTablet';
 export * from './MenuBar/BubbleMenu/BubbleMenu';
 export * from './PostCard/PostCard';
 export * from './PostCard/PostHeader';
