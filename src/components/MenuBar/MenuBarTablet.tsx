@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { userUidState, userDataState } from '@/types/index';
 import { BubbleMenu } from '@/components';
 
-import logo from '@/public/images/logo.svg';
+import logo from '@/public/images/logo-tablet.svg';
 import homeEmpty from '@/public/icons/MenuBar/home-empty.png';
 import homeFill from '@/public/icons/MenuBar/home-fill.png';
 import searchEmpty from '@/public/icons/MenuBar/search-empty.png';
@@ -20,7 +20,7 @@ import postEmpty from '@/public/icons/MenuBar/post-empty.png';
 // import postFill from '@/public/icons/MenuBar/post-fill.png';
 import seeMore from '@/public/icons/MenuBar/menuBurger.png';
 
-export function MenuBar() {
+export function MenuBarTablet() {
   const [isBubble, setIsBubble] = useState<boolean>(false);
 
   const userUid = useSelector((state: userUidState) => state.userUid.value);
@@ -44,19 +44,19 @@ export function MenuBar() {
       <Menu>
         <div>
           <MenuLink href='/main'>
-            <MenuIcon src={homeEmpty} alt='홈'></MenuIcon>홈
+            <MenuIcon src={homeEmpty} alt='홈'></MenuIcon>
           </MenuLink>
           <MenuLink as='button'>
-            <MenuIcon src={searchEmpty} alt='검색'></MenuIcon>검색
+            <MenuIcon src={searchEmpty} alt='검색'></MenuIcon>
           </MenuLink>
           <MenuLink href='/main'>
-            <MenuIcon src={messageEmpty} alt='메세지'></MenuIcon>메세지
+            <MenuIcon src={messageEmpty} alt='메세지'></MenuIcon>
           </MenuLink>
           <MenuLink as='button'>
-            <MenuIcon src={alertEmpty} alt='알림'></MenuIcon>알림
+            <MenuIcon src={alertEmpty} alt='알림'></MenuIcon>
           </MenuLink>
           <MenuLink as='button'>
-            <MenuIcon src={postEmpty} alt='만들기'></MenuIcon>만들기
+            <MenuIcon src={postEmpty} alt='만들기'></MenuIcon>
           </MenuLink>
           <MenuLink href='/main'>
             <ProfileIcon
@@ -66,12 +66,11 @@ export function MenuBar() {
               height={27}
               unoptimized
             ></ProfileIcon>
-            프로필
           </MenuLink>
         </div>
         {isBubble ? <BubbleMenu /> : null}
         <SeeMoreButton as='button' onClick={handleBubble}>
-          <MenuIcon src={seeMore} alt='더보기'></MenuIcon>더보기
+          <MenuIcon src={seeMore} alt='더보기'></MenuIcon>
         </SeeMoreButton>
       </Menu>
     </MenuContainer>
@@ -80,7 +79,7 @@ export function MenuBar() {
 
 const MenuContainer = styled.section`
   position: fixed;
-  width: 18.229%;
+  width: 55px;
   height: 100vh;
   padding: 40px 30px 24.52px 30px;
   border-right: 1px solid ${getColor('Grey/grey-100')};
@@ -88,6 +87,8 @@ const MenuContainer = styled.section`
 
 const Logo = styled.h1`
   margin-bottom: 35px;
+  display: flex;
+  justify-content: center;
 `;
 
 const LogoLink = styled(Link)`
@@ -97,18 +98,20 @@ const LogoLink = styled(Link)`
 const Menu = styled.div`
   display: flex;
   flex-flow: column nowrap;
+  justify-content: center;
   height: 80%;
   justify-content: space-between;
 `;
 
 const MenuLink = styled(Link)`
   all: unset;
-  width: 96%;
-  padding: 12px 0px 12px 15px;
+  width: 27px;
+  padding: 12px 12px 12px 15px;
   margin-bottom: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   border-radius: 8px;
 
   :hover {
@@ -123,7 +126,6 @@ const SeeMoreButton = styled(MenuLink)`
 const MenuIcon = styled(Image)`
   width: 27px;
   height: 27px;
-  margin-right: 22px;
 `;
 
 const ProfileIcon = styled(MenuIcon)`
