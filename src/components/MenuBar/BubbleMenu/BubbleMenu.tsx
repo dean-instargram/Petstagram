@@ -46,7 +46,19 @@ const BubbleContainer = styled.div`
   display: flex;
   flex-flow: column nowrap;
   width: 243px;
-  background-color: aliceblue;
+  position: relative;
+  top: 30px;
+
+  :after {
+    content: '';
+    position: absolute;
+    border-top: 15px solid ${getColor('primary color')};
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 0px solid transparent;
+    top: 205px;
+    left: 30px;
+  }
 `;
 
 const BubbleLink = styled(Link)`
