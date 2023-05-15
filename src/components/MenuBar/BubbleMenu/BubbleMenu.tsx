@@ -32,10 +32,10 @@ export function BubbleMenu() {
       <BubbleLink href='main'>
         <BubbleIcon src={bookMark} alt='저장됨' /> 저장됨
       </BubbleLink>
-      <BubbleButton>
+      <BubbleLink as='button'>
         <BubbleIcon src={lightMode} alt='모드전환' /> 모드전환
-      </BubbleButton>
-      <LogoutButton type='submit' onClick={handleLogout}>
+      </BubbleLink>
+      <LogoutButton as='button' type='submit' onClick={handleLogout}>
         로그아웃
       </LogoutButton>
     </BubbleContainer>
@@ -59,16 +59,6 @@ const BubbleLink = styled(Link)`
   align-items: center;
 `;
 
-const BubbleButton = styled.button`
-  all: unset;
-  cursor: pointer;
-  padding: 12px 0 12px 23px;
-  background-color: ${getColor('primary color')};
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-`;
-
 const BubbleIcon = styled(Image)`
   margin-right: 22px;
 `;
@@ -77,7 +67,7 @@ const FirstLink = styled(BubbleLink)`
   border-radius: 15px 15px 0px 0px;
 `;
 
-const LogoutButton = styled(BubbleButton)`
+const LogoutButton = styled(BubbleLink)`
   border-top: 1px solid white;
   border-radius: 0px 0px 15px 15px;
   padding: 16px 0 16px 23px;

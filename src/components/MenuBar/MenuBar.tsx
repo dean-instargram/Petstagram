@@ -43,22 +43,22 @@ export function MenuBar() {
       <h2 className='a11y-hidden'>메뉴바</h2>
       <Menu>
         <div>
-          <MenuButton>
+          <MenuLink href='/main'>
             <MenuIcon src={homeEmpty} alt='홈'></MenuIcon>홈
-          </MenuButton>
-          <MenuButton>
+          </MenuLink>
+          <MenuLink as='button'>
             <MenuIcon src={searchEmpty} alt='검색'></MenuIcon>검색
-          </MenuButton>
-          <MenuButton>
+          </MenuLink>
+          <MenuLink href='/main'>
             <MenuIcon src={messageEmpty} alt='메세지'></MenuIcon>메세지
-          </MenuButton>
-          <MenuButton>
+          </MenuLink>
+          <MenuLink as='button'>
             <MenuIcon src={alertEmpty} alt='알림'></MenuIcon>알림
-          </MenuButton>
-          <MenuButton>
+          </MenuLink>
+          <MenuLink as='button'>
             <MenuIcon src={postEmpty} alt='만들기'></MenuIcon>만들기
-          </MenuButton>
-          <MenuButton>
+          </MenuLink>
+          <MenuLink href='/main'>
             <ProfileIcon
               src={userInfo.data.profile_url}
               alt='프로필'
@@ -67,10 +67,10 @@ export function MenuBar() {
               unoptimized
             ></ProfileIcon>
             프로필
-          </MenuButton>
+          </MenuLink>
         </div>
         {isBubble ? <BubbleMenu /> : null}
-        <SeeMoreButton onClick={handleBubble}>
+        <SeeMoreButton as='button' onClick={handleBubble}>
           <MenuIcon src={seeMore} alt='더보기'></MenuIcon>더보기
         </SeeMoreButton>
       </Menu>
@@ -100,7 +100,7 @@ const Menu = styled.div`
   justify-content: space-between;
 `;
 
-const MenuButton = styled.button`
+const MenuLink = styled(Link)`
   all: unset;
   width: 96%;
   padding: 12px 0px 12px 15px;
@@ -115,7 +115,7 @@ const MenuButton = styled.button`
   }
 `;
 
-const SeeMoreButton = styled(MenuButton)`
+const SeeMoreButton = styled(MenuLink)`
   margin-bottom: 0px;
 `;
 
