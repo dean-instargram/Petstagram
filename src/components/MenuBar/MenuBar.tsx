@@ -1,7 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import styled from 'styled-components';
+import { useState } from 'react';
 import { getColor } from '@/theme/utils';
+import { useSelector } from 'react-redux';
+import { userUidState, userDataState } from '@/types/index';
+import { BubbleMenu } from '@/components';
 
 import logo from '@/public/images/logo.svg';
 import homeEmpty from '@/public/icons/MenuBar/home-empty.png';
@@ -17,6 +21,18 @@ import postEmpty from '@/public/icons/MenuBar/post-empty.png';
 import seeMore from '@/public/icons/MenuBar/menuBurger.png';
 
 export function MenuBar() {
+  const [isBubble, setIsBubble] = useState<boolean>(false);
+
+  const userUid = useSelector((state: userUidState) => state.userUid.value);
+  const userInfo = useSelector((state: userDataState) => {
+    const { isLoading, error, data } = state.userData;
+    return { isLoading, error, data };
+  });
+
+  const handleBubble = () => {
+    setIsBubble(!isBubble);
+  };
+
   return (
     <MenuContainer>
       <Logo>
@@ -42,8 +58,19 @@ export function MenuBar() {
           <MenuButton>
             <MenuIcon src={postEmpty} alt='만들기'></MenuIcon>만들기
           </MenuButton>
+          <MenuButton>
+            <ProfileIcon
+              src={userInfo.data.profile_url}
+              alt='프로필'
+              width={27}
+              height={27}
+              unoptimized
+            ></ProfileIcon>
+            프로필
+          </MenuButton>
         </div>
-        <SeeMoreButton>
+        {isBubble ? <BubbleMenu /> : null}
+        <SeeMoreButton onClick={handleBubble}>
           <MenuIcon src={seeMore} alt='더보기'></MenuIcon>더보기
         </SeeMoreButton>
       </Menu>
@@ -93,7 +120,11 @@ const SeeMoreButton = styled(MenuButton)`
 `;
 
 const MenuIcon = styled(Image)`
-  width: 26px;
+  width: 27px;
   height: 27px;
   margin-right: 22px;
+`;
+
+const ProfileIcon = styled(MenuIcon)`
+  border-radius: 50%;
 `;
