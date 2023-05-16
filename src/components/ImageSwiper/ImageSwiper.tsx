@@ -45,7 +45,6 @@ export function ImageSwiper({ images, style }: ImageSwiperProps) {
 }
 
 const StyledSwiper = styled(Swiper)`
-  z-index: -1;
   width: 100%;
   height: 674px;
   -webkit-touch-callout: none;

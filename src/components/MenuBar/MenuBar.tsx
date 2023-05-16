@@ -154,6 +154,7 @@ const DesktopMenuBar = styled.section`
   height: 100vh;
   padding: 40px 30px 24.52px 30px;
   border-right: 1px solid ${getColor('Grey/grey-100')};
+  z-index: 10;
 
   @media (max-width: 1919px) {
     width: 300px;
@@ -171,6 +172,7 @@ const TabletMenuBar = styled.section`
   height: 100vh;
   padding: 40px 30px 24.52px 30px;
   border-right: 1px solid ${getColor('Grey/grey-100')};
+  z-index: 10;
 
   @media (max-width: 768px) or (min-width: 1460px) {
     display: none;

@@ -48,7 +48,6 @@ const BubbleContainer = styled.div`
   width: 243px;
   position: relative;
   top: 30px;
-  z-index: 200;
 
   :after {
     content: '';
