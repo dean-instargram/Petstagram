@@ -23,22 +23,34 @@ export default function Main() {
   return (
     <MainContainer>
       <MenuBar></MenuBar>
-      <PostSection>
-        <h2 className='a11y-hidden'>게시물</h2>
-        <InfiniteScroll />
-        {/* <UploadData /> */}
-      </PostSection>
-      <RecommendFollow />
+      <HomeDiv>
+        <PostSection>
+          <h2 className='a11y-hidden'>게시물</h2>
+          <InfiniteScroll />
+          {/* <UploadData /> */}
+        </PostSection>
+        <RecommendFollow />
+      </HomeDiv>
     </MainContainer>
   );
 }
 
 const MainContainer = styled.div`
   display: flex;
+  justify-content: space-between;
 `;
 
 const PostSection = styled.section`
   display: flex;
   flex-flow: column nowrap;
-  padding-left: 32.473958%;
+  margin-right: 130px;
+
+  @media (max-width: 1300px) {
+    margin-right: 0;
+  }
+`;
+
+const HomeDiv = styled.div`
+  display: flex;
+  margin: 0 auto;
 `;

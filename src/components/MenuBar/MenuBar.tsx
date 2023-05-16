@@ -117,28 +117,74 @@ export function MenuBar() {
           </SeeMoreButton>
         </Menu>
       </TabletMenuBar>
+      <MobileMenuBar>
+        <h2 className='a11y-hidden'>메뉴바</h2>
+        <MobileMenu>
+          <TabletMenuLink href='/main'>
+            <TabletIcon src={homeEmpty} alt='홈'></TabletIcon>
+          </TabletMenuLink>
+          <TabletMenuLink as='button'>
+            <TabletIcon src={alertEmpty} alt='알림'></TabletIcon>
+          </TabletMenuLink>
+          <TabletMenuLink as='button'>
+            <TabletIcon src={postEmpty} alt='만들기'></TabletIcon>
+          </TabletMenuLink>
+          <TabletMenuLink href='/main'>
+            <TabletIcon src={messageEmpty} alt='메세지'></TabletIcon>
+          </TabletMenuLink>
+          <TabletMenuLink href='/main'>
+            <TabletProfileIcon
+              src={userInfo.data.profile_url}
+              alt='프로필'
+              width={27}
+              height={27}
+              unoptimized
+            ></TabletProfileIcon>
+          </TabletMenuLink>
+        </MobileMenu>
+      </MobileMenuBar>
     </>
   );
 }
 
 const DesktopMenuBar = styled.section`
-  position: fixed;
-  width: 18.229%;
+  position: sticky;
+  top: 0;
+  width: 350px;
   height: 100vh;
   padding: 40px 30px 24.52px 30px;
   border-right: 1px solid ${getColor('Grey/grey-100')};
 
-  @media (max-width: 767px) {
+  @media (max-width: 1919px) {
+    width: 300px;
+  }
+
+  @media (max-width: 1460px) {
     display: none;
   }
 `;
 
 const TabletMenuBar = styled.section`
-  position: fixed;
+  position: sticky;
+  top: 0;
   width: 55px;
   height: 100vh;
   padding: 40px 30px 24.52px 30px;
   border-right: 1px solid ${getColor('Grey/grey-100')};
+
+  @media (max-width: 768px) or (min-width: 1460px) {
+    display: none;
+  }
+`;
+
+const MobileMenuBar = styled.section`
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  padding: 10px 27.7px;
+  border-right: 1px solid ${getColor('Grey/grey-100')};
+  background-color: white;
+  z-index: 10;
 
   @media (min-width: 768px) {
     display: none;
@@ -163,6 +209,12 @@ const Menu = styled.div`
   flex-flow: column nowrap;
   height: 80%;
   justify-content: space-between;
+`;
+
+const MobileMenu = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
 `;
 
 const MenuLink = styled(Link)`
