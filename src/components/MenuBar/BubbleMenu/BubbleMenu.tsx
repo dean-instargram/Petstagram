@@ -26,7 +26,7 @@ export function BubbleMenu() {
   return (
     <BubbleContainer>
       <h3 className='a11y-hidden'>더보기 메뉴</h3>
-      <FirstLink href='test'>
+      <FirstLink href='setting'>
         <BubbleIcon src={settings} alt='설정' /> 설정
       </FirstLink>
       <BubbleLink href='main'>
