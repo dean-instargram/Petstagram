@@ -13,7 +13,7 @@ import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 
 // 각 페이지에서 불러와서 쓸 '레이아웃 적용된 페이지의 type'
-export type NextPageWithLayout = NextPage & {
+type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 

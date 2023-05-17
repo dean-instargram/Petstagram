@@ -6,7 +6,6 @@ import { getUserData } from '@/redux/userData';
 import { userUidState, userDataState } from '@/types/index';
 
 import type { ReactElement } from 'react';
-import type { NextPageWithLayout } from './_app';
 import { MenuBarLayout } from '@/components';
 
 export default function Main() {
