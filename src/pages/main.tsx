@@ -5,6 +5,10 @@ import { useEffect } from 'react';
 import { getUserData } from '@/redux/userData';
 import { userUidState, userDataState } from '@/types/index';
 
+import type { ReactElement } from 'react';
+import type { NextPageWithLayout } from './_app';
+import { MenuBarLayout } from '@/components';
+
 export default function Main() {
   const dispatch = useDispatch();
   const userUid = useSelector((state: userUidState) => state.userUid.value);
@@ -21,23 +25,25 @@ export default function Main() {
   }, [userUid]);
 
   return (
-    <MainContainer>
-      <MenuBar></MenuBar>
-      <HomeDiv>
-        <PostSection>
-          <h2 className='a11y-hidden'>게시물</h2>
-          <InfiniteScroll />
-          {/* <UploadData /> */}
-        </PostSection>
-        <RecommendFollow />
-      </HomeDiv>
-    </MainContainer>
+    <HomeDiv>
+      <PostSection>
+        <h2 className='a11y-hidden'>게시물</h2>
+        <InfiniteScroll />
+        {/* <UploadData /> */}
+      </PostSection>
+      <RecommendFollow />
+    </HomeDiv>
   );
 }
 
-const MainContainer = styled.div`
+// getLayout으로 해당 페이지에 필요한 레이아웃 적용
+Main.getLayout = function getLayout(page: ReactElement) {
+  return <MenuBarLayout>{page}</MenuBarLayout>; // 공통 레이아웃만 적용
+};
+
+const HomeDiv = styled.div`
   display: flex;
-  justify-content: space-between;
+  margin: 0 auto;
 `;
 
 const PostSection = styled.section`
@@ -48,9 +54,4 @@ const PostSection = styled.section`
   @media (max-width: 1300px) {
     margin-right: 0;
   }
-`;
-
-const HomeDiv = styled.div`
-  display: flex;
-  margin: 0 auto;
 `;

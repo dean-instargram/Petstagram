@@ -11,3 +11,4 @@ export * from './RecommendFollow/RecommendFollow';
 export * from './RecommendFollow/FollowList';
 export * from './RecommendFollow/UserList';
 export * from './InfiniteScroll/InfiniteScroll';
+export * from './layout/MenuBarLayout';
