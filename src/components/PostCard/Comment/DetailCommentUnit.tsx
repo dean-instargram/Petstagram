@@ -1,7 +1,7 @@
 import * as S from '../PostCard.styled';
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
-import { Comment } from '@/components/InfiniteScroll/postList';
+import { Comment, Recomment } from '@/components/InfiniteScroll/postList';
 import { renderProfile, caculateTime } from '@/utils/mainUtil';
 import { User } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
@@ -10,10 +10,11 @@ import heart from '@/public/icons/PostCard/heart.png';
 import { getColor } from '@/theme/utils';
 
 interface DetailCommentUnitProps {
-  data: Comment;
+  data: Comment | Recomment;
+  index: number;
 }
 
-export function DetailCommentUnit({ data }: DetailCommentUnitProps) {
+export function DetailCommentUnit({ data, index }: DetailCommentUnitProps) {
   const [commentUserData, setCommentUserDate] = useState<User | undefined>(
     undefined
   );

@@ -11,6 +11,7 @@ import {
   PostIcon,
   LikeList,
   AddComment,
+  DetailComment,
 } from '@/components/index';
 
 import { getColor } from '@/theme/utils';
@@ -73,15 +74,16 @@ export function PostCard({ post }: PostCardProps) {
             <p>{post.content}</p>
           </S.FlexRow>
           <S.MoreButton color={getColor('Grey/grey-700')}>더 보기</S.MoreButton>
-          <S.MoreCommentButton color={getColor('Grey/grey-700')}>
+          {/* <S.MoreCommentButton color={getColor('Grey/grey-700')}>
             댓글 {post.comment.length}개 모두 보기
-          </S.MoreCommentButton>
-          {post.comment.map((data) => {
+          </S.MoreCommentButton> */}
+          {post.comment.map((data, index) => {
             return (
               <>
+                <DetailComment data={data} index={index} />
                 {/* <DetailCommentUnit data={data}></DetailCommentUnit> */}
-                <SimpleCommentUnit data={data}></SimpleCommentUnit>
-                {data.recomment.length != 0
+                {/* <SimpleCommentUnit data={data}></SimpleCommentUnit> */}
+                {/* {data.recomment.length != 0
                   ? data.recomment.map((recomment) => {
                       return (
                         <S.FlexRow>
@@ -99,7 +101,7 @@ export function PostCard({ post }: PostCardProps) {
                         </S.FlexRow>
                       );
                     })
-                  : null}
+                  : null} */}
               </>
             );
           })}
