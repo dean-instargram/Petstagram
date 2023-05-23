@@ -20,6 +20,10 @@ import { db } from '@/firebase/app';
 let lastVisible: any = undefined;
 let isFirst = true;
 
+export interface PostData extends Post {
+  postId: string;
+}
+
 export function InfiniteScroll(): JSX.Element {
   const userUid = useSelector((state: userUidState) => state.userUid.value);
   const userInfo = useSelector((state: userDataState) => {
@@ -28,7 +32,7 @@ export function InfiniteScroll(): JSX.Element {
   });
 
   const [userData, setUserData] = useState<User>();
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [follows, setFollows] = useState<string[]>([]);
 
   useEffect(() => {
@@ -75,7 +79,7 @@ export function InfiniteScroll(): JSX.Element {
       setPosts((posts) => {
         const postArr = [...posts];
         snapshot.forEach((doc) => {
-          postArr.push(doc.data() as Post);
+          postArr.push({ postId: doc.id, ...doc.data() } as PostData);
         });
         return postArr;
       });
@@ -115,7 +119,7 @@ export function InfiniteScroll(): JSX.Element {
 
   return (
     <Container>
-      {posts.map((post: Post, idx: number) => (
+      {posts.map((post: PostData, idx: number) => (
         <PostCard key={idx} post={post} />
       ))}
     </Container>

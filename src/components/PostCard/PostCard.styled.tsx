@@ -113,6 +113,10 @@ export const FlexRow = styled.div`
   gap: 8px;
 `;
 
+export const FlexRowGrow = styled(FlexRow)`
+  flex-grow: 1;
+`;
+
 export const Comment = styled(FlexRow)`
   margin-bottom: 4px;
 `;

@@ -3,6 +3,7 @@ import * as S from './PostCard.styled';
 import React, { useEffect, useState } from 'react';
 import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
 import { Post, User } from '@/components/InfiniteScroll/postList';
+import { PostData } from '@/components/InfiniteScroll/InfiniteScroll';
 import { getData } from '@/firebase/utils';
 import {
   PostHeader,
@@ -18,7 +19,7 @@ import { getColor } from '@/theme/utils';
 import { isCreateAtType, caculateTime } from '@/utils/mainUtil';
 
 interface PostCardProps {
-  post: Post;
+  post: PostData;
 }
 
 export function PostCard({ post }: PostCardProps) {
@@ -105,7 +106,7 @@ export function PostCard({ post }: PostCardProps) {
               </>
             );
           })}
-          <AddComment />
+          <AddComment postId={post.postId} />
         </S.CommentSection>
       </S.Article>
     </>
