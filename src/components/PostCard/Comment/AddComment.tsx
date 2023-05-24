@@ -41,6 +41,7 @@ export function AddComment({ postId }: PostCardProps) {
   const updateComment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     getPost();
+    setContent('');
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +56,7 @@ export function AddComment({ postId }: PostCardProps) {
           placeholder='댓글 달기...'
           color={getColor('Grey/grey-700')}
           onChange={handleInput}
+          value={content}
         ></S.CommentInput>
         <S.AddCommentButton type='submit' color={getColor('point color')}>
           게시
