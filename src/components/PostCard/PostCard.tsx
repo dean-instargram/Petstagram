@@ -28,6 +28,7 @@ export function PostCard({ postId }: PostCardProps) {
   const [postUserData, setPostUserData] = useState<User | undefined>(undefined);
   const [likeEmail, setLikeEmail] = useState<string[]>([]);
   const [postDateP, setPostDateP] = useState<string>('');
+  const [commentIndex, setCommentIndex] = useState<number | null>(null);
   const images = post?.images;
   const postUserId = postUserData?.email?.split('@')[0];
 
@@ -43,6 +44,10 @@ export function PostCard({ postId }: PostCardProps) {
       const result = (await getData('users', uid)) as User;
       if (result) setLikeEmail((likeEmail) => [...likeEmail, result.email]);
     }
+  };
+
+  const handleAddRecomment = (index: number | null) => {
+    setCommentIndex(index);
   };
 
   useEffect(() => {
@@ -71,6 +76,8 @@ export function PostCard({ postId }: PostCardProps) {
       }
     }
   }, [post]);
+
+  console.log('index가 바뀌는지 보자~', commentIndex);
 
   return (
     <>
@@ -102,7 +109,11 @@ export function PostCard({ postId }: PostCardProps) {
             {post?.comment.map((data: Comment, index: number) => {
               return (
                 <>
-                  <DetailComment data={data} index={index} />
+                  <DetailComment
+                    data={data}
+                    index={index}
+                    onClickRecomment={handleAddRecomment}
+                  />
                   {/* <DetailCommentUnit data={data}></DetailCommentUnit> */}
                   {/* <SimpleCommentUnit data={data}></SimpleCommentUnit> */}
                   {/* {data.recomment.length != 0
@@ -127,7 +138,18 @@ export function PostCard({ postId }: PostCardProps) {
                 </>
               );
             })}
-            <AddComment postId={postId} />
+            {commentIndex ? (
+              <AddComment
+                postId={postId}
+                index={commentIndex}
+                onClickRecomment={handleAddRecomment}
+              />
+            ) : (
+              <AddComment
+                postId={postId}
+                onClickRecomment={handleAddRecomment}
+              />
+            )}
           </S.CommentSection>
         </S.Article>
       ) : null}

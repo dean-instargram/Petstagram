@@ -77,23 +77,6 @@ export function InfiniteScroll(): JSX.Element {
       );
     }
 
-    // 안되면 이걸 열면 됨
-    // getDocs(q).then((snapshot) => {
-    //   setPosts((posts) => {
-    //     const postArr = [...posts];
-    //     snapshot.forEach((doc) => {
-    //       postArr.push({ postId: doc.id, ...doc.data() } as PostData);
-    //     });
-    //     return postArr;
-    //   });
-
-    //   if (snapshot.docs.length === 0) {
-    //     lastVisible = -1;
-    //   } else {
-    //     lastVisible = snapshot.docs[snapshot.docs.length - 1];
-    //   }
-    // });
-
     getDocs(q).then((snapshot) => {
       setPostIds((postIds) => {
         const postArr = [...postIds];

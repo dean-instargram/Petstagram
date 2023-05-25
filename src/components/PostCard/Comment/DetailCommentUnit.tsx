@@ -12,9 +12,14 @@ import { getColor } from '@/theme/utils';
 interface DetailCommentUnitProps {
   data: Comment | Recomment;
   index: number;
+  onClickRecomment: (index: number) => void;
 }
 
-export function DetailCommentUnit({ data, index }: DetailCommentUnitProps) {
+export function DetailCommentUnit({
+  data,
+  index,
+  onClickRecomment,
+}: DetailCommentUnitProps) {
   const [commentUserData, setCommentUserDate] = useState<User | undefined>(
     undefined
   );
@@ -57,7 +62,10 @@ export function DetailCommentUnit({ data, index }: DetailCommentUnitProps) {
               좋아요 {data.like.length}개
             </RecommentButton>
           ) : null}
-          <RecommentButton color={getColor('Grey/grey-600')}>
+          <RecommentButton
+            color={getColor('Grey/grey-600')}
+            onClick={() => onClickRecomment(index)}
+          >
             답글 달기
           </RecommentButton>
         </S.FlexRow>

@@ -11,9 +11,11 @@ import { userUidState, userDataState } from '@/types/index';
 
 interface PostCardProps {
   postId: string;
+  index?: number | null;
+  onClickRecomment: (index: number | null) => void;
 }
 
-export function AddComment({ postId }: PostCardProps) {
+export function AddComment({ postId, index, onClickRecomment }: PostCardProps) {
   const userUid = useSelector((state: userUidState) => state.userUid.value);
   const userInfo = useSelector((state: userDataState) => {
     const { isLoading, error, data } = state.userData;
@@ -22,17 +24,35 @@ export function AddComment({ postId }: PostCardProps) {
 
   const [content, setContent] = useState<string>('');
 
-  const getPost = async () => {
+  const updatePost = async () => {
     const result = (await getData('posts', postId)) as Post;
     if (result) {
-      result.comment.push({
-        content: content,
-        createAt: new Date().toISOString(),
-        email: userInfo.data.email,
-        like: [],
-        recomment: [],
-        user_uid: userUid,
-      });
+      if (index) {
+        // 답글 게시
+
+        // 임시 답글 표현 코드
+        const recommentContent = `@${
+          userInfo.data.email.split('@')[0]
+        } ${content}`;
+
+        result.comment[index].recomment.push({
+          content: recommentContent,
+          createAt: new Date().toISOString(),
+          email: userInfo.data.email,
+          like: [],
+          user_uid: userUid,
+        });
+      } else {
+        // 댓글 게시
+        result.comment.push({
+          content: content,
+          createAt: new Date().toISOString(),
+          email: userInfo.data.email,
+          like: [],
+          recomment: [],
+          user_uid: userUid,
+        });
+      }
 
       updateData('posts', postId, result);
     }
@@ -40,8 +60,9 @@ export function AddComment({ postId }: PostCardProps) {
 
   const updateComment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    getPost();
+    updatePost();
     setContent('');
+    onClickRecomment(null);
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {

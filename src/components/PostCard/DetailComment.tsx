@@ -8,9 +8,14 @@ import styled from 'styled-components';
 interface DetailCommentProps {
   data: Comment;
   index: number;
+  onClickRecomment: (index: number) => void;
 }
 
-export function DetailComment({ data, index }: DetailCommentProps) {
+export function DetailComment({
+  data,
+  index,
+  onClickRecomment,
+}: DetailCommentProps) {
   const [isView, setIsView] = useState<boolean>(false);
 
   const handleView = () => {
@@ -19,7 +24,11 @@ export function DetailComment({ data, index }: DetailCommentProps) {
 
   return (
     <>
-      <DetailCommentUnit data={data} index={index}></DetailCommentUnit>
+      <DetailCommentUnit
+        data={data}
+        index={index}
+        onClickRecomment={onClickRecomment}
+      ></DetailCommentUnit>
       <RecommentSection>
         {data.recomment.length != 0 ? (
           <S.MoreCommentButton
@@ -35,7 +44,13 @@ export function DetailComment({ data, index }: DetailCommentProps) {
         ) : null}
         {isView
           ? data.recomment.map((recommentData) => {
-              return <DetailCommentUnit data={recommentData} index={index} />;
+              return (
+                <DetailCommentUnit
+                  data={recommentData}
+                  index={index}
+                  onClickRecomment={onClickRecomment}
+                />
+              );
             })
           : null}
       </RecommentSection>
