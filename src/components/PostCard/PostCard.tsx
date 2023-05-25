@@ -1,6 +1,6 @@
 import * as S from './PostCard.styled';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ImageSwiper } from '../ImageSwiper/ImageSwiper';
 import { User, Comment } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
@@ -29,6 +29,8 @@ export function PostCard({ postId }: PostCardProps) {
   const [likeEmail, setLikeEmail] = useState<string[]>([]);
   const [postDateP, setPostDateP] = useState<string>('');
   const [commentIndex, setCommentIndex] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const images = post?.images;
   const postUserId = postUserData?.email?.split('@')[0];
 
@@ -77,8 +79,6 @@ export function PostCard({ postId }: PostCardProps) {
     }
   }, [post]);
 
-  console.log('index가 바뀌는지 보자~', commentIndex);
-
   return (
     <>
       {post && postUserData && likeEmail ? (
@@ -113,6 +113,7 @@ export function PostCard({ postId }: PostCardProps) {
                     data={data}
                     index={index}
                     onClickRecomment={handleAddRecomment}
+                    ref={inputRef}
                   />
                   {/* <DetailCommentUnit data={data}></DetailCommentUnit> */}
                   {/* <SimpleCommentUnit data={data}></SimpleCommentUnit> */}
@@ -143,11 +144,13 @@ export function PostCard({ postId }: PostCardProps) {
                 postId={postId}
                 index={commentIndex}
                 onClickRecomment={handleAddRecomment}
+                ref={inputRef}
               />
             ) : (
               <AddComment
                 postId={postId}
                 onClickRecomment={handleAddRecomment}
+                ref={inputRef}
               />
             )}
           </S.CommentSection>

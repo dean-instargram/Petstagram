@@ -1,6 +1,6 @@
 import * as S from '../PostCard.styled';
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef, RefObject } from 'react';
 import { Comment, Recomment } from '@/components/InfiniteScroll/postList';
 import { renderProfile, caculateTime } from '@/utils/mainUtil';
 import { User } from '@/components/InfiniteScroll/postList';
@@ -13,13 +13,13 @@ interface DetailCommentUnitProps {
   data: Comment | Recomment;
   index: number;
   onClickRecomment: (index: number) => void;
+  inputRef: RefObject<HTMLInputElement>;
 }
 
-export function DetailCommentUnit({
-  data,
-  index,
-  onClickRecomment,
-}: DetailCommentUnitProps) {
+export const DetailCommentUnit = forwardRef<
+  HTMLInputElement,
+  DetailCommentUnitProps
+>(function DetailCommentUnit({ data, index, onClickRecomment, inputRef }) {
   const [commentUserData, setCommentUserDate] = useState<User | undefined>(
     undefined
   );
@@ -29,6 +29,14 @@ export function DetailCommentUnit({
     if (!commentUserData) {
       const result = (await getData('users', data.user_uid)) as User;
       if (result) setCommentUserDate(result);
+    }
+  };
+
+  const handleAddRecomment = () => {
+    onClickRecomment(index);
+    if (inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.value = `@${commentUserData?.email.split('@')[0]}`;
     }
   };
 
@@ -64,7 +72,7 @@ export function DetailCommentUnit({
           ) : null}
           <RecommentButton
             color={getColor('Grey/grey-600')}
-            onClick={() => onClickRecomment(index)}
+            onClick={handleAddRecomment}
           >
             답글 달기
           </RecommentButton>
@@ -75,7 +83,7 @@ export function DetailCommentUnit({
       </S.IconButton>
     </CommentUnit>
   );
-}
+});
 
 const CommentUnit = styled(S.FlexRow)`
   justify-content: space-between;
