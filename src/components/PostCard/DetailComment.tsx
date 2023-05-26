@@ -6,24 +6,25 @@ import { useState, forwardRef, RefObject } from 'react';
 import styled from 'styled-components';
 
 interface DetailCommentProps {
+  postId: string;
   data: Comment;
   index: number;
   onClickRecomment: (index: number) => void;
 }
 
 export const DetailComment = forwardRef<HTMLInputElement, DetailCommentProps>(
-  function DetailComment({ data, index, onClickRecomment }, ref) {
+  function DetailComment({ postId, data, index, onClickRecomment }, ref) {
     const [isView, setIsView] = useState<boolean>(false);
 
     const handleView = () => {
       setIsView(() => !isView);
     };
-
     return (
       <>
         <DetailCommentUnit
+          postId={postId}
           data={data}
-          index={index}
+          commentIndex={index}
           onClickRecomment={onClickRecomment}
           inputRef={ref as RefObject<HTMLInputElement>}
         ></DetailCommentUnit>
@@ -41,13 +42,15 @@ export const DetailComment = forwardRef<HTMLInputElement, DetailCommentProps>(
             </S.MoreCommentButton>
           ) : null}
           {isView
-            ? data.recomment.map((recommentData) => {
+            ? data.recomment.map((recommentData, recommentIndex) => {
                 return (
                   <DetailCommentUnit
+                    postId={postId}
                     data={recommentData}
-                    index={index}
+                    commentIndex={index}
                     onClickRecomment={onClickRecomment}
                     inputRef={ref as RefObject<HTMLInputElement>}
+                    recommentIndex={recommentIndex}
                   />
                 );
               })

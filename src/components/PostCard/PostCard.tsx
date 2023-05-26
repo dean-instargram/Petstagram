@@ -110,6 +110,7 @@ export function PostCard({ postId }: PostCardProps) {
               return (
                 <>
                   <DetailComment
+                    postId={postId}
                     data={data}
                     index={index}
                     onClickRecomment={handleAddRecomment}
