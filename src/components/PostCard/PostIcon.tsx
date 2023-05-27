@@ -1,18 +1,67 @@
 import * as S from './PostCard.styled';
+import { useState, useEffect } from 'react';
 
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
+import { getData, updateData } from '@/firebase/utils';
+import { Post } from '@/components/InfiniteScroll/postList';
 
 import heart from '@/public/icons/PostCard/heart.png';
+import heartFill from '@/public/icons/PostCard/heart-fill.png';
 import comment from '@/public/icons/PostCard/comment.png';
 import send from '@/public/icons/PostCard/send.png';
 import bookmark from '@/public/icons/PostCard/bookmark.png';
+import bookmarkFill from '@/public/icons/PostCard/bookmark-fill.png';
+import { userUidState, userDataState } from '@/types/index';
 
-export function PostIcon() {
+interface PostIconProps {
+  postId: string;
+  like: string[];
+}
+
+export function PostIcon({ postId, like }: PostIconProps) {
+  const [isLike, setIsLike] = useState<boolean>(false);
+
+  const userUid = useSelector((state: userUidState) => state.userUid.value);
+  const userInfo = useSelector((state: userDataState) => {
+    const { isLoading, error, data } = state.userData;
+    return { isLoading, error, data };
+  });
+
+  useEffect(() => {
+    if (like.includes(userUid)) {
+      setIsLike(true);
+    } else {
+      setIsLike(false);
+    }
+  }, [like]);
+
+  const handleHeart = async () => {
+    const result = (await getData('posts', postId)) as Post;
+    if (result) {
+      if (isLike) {
+        // 좋아요 삭제
+        const index = like.findIndex((element) => element === userUid);
+        if (index !== -1) {
+          result.like.splice(index, 1);
+        }
+      } else {
+        // 좋아요 추가
+        result.like.push(userUid);
+      }
+      updateData('posts', postId, result);
+    }
+  };
+
   return (
     <S.IconSection>
       <S.FlexRow>
-        <S.IconButton>
-          <Image src={heart} alt='좋아요' width={40} height={40}></Image>
+        <S.IconButton onClick={handleHeart}>
+          {isLike ? (
+            <Image src={heartFill} alt='좋아요' width={40} height={40}></Image>
+          ) : (
+            <Image src={heart} alt='좋아요' width={40} height={40}></Image>
+          )}
         </S.IconButton>
         <S.IconButton>
           <Image src={comment} alt='댓글' width={40} height={40}></Image>

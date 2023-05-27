@@ -41,13 +41,6 @@ export function PostCard({ postId }: PostCardProps) {
     }
   };
 
-  const getLikeUsers = async (uid: string) => {
-    if (!postUserData && post) {
-      const result = (await getData('users', uid)) as User;
-      if (result) setLikeEmail((likeEmail) => [...likeEmail, result.email]);
-    }
-  };
-
   const handleAddRecomment = (index: number | null) => {
     setCommentIndex(index);
   };
@@ -69,9 +62,6 @@ export function PostCard({ postId }: PostCardProps) {
   useEffect(() => {
     if (post !== undefined) {
       getUserData();
-      post.like.map((uid: string) => {
-        getLikeUsers(uid);
-      });
 
       if (isCreateAtType(post.createAt)) {
         setPostDateP(caculateTime(post.createAt.seconds));
@@ -91,9 +81,9 @@ export function PostCard({ postId }: PostCardProps) {
             }}
           ></PostHeader>
           <ImageSwiper images={images} />
-          <PostIcon />
+          <PostIcon postId={postId} like={post.like} />
           <S.CommentSection>
-            <LikeList likeEmail={likeEmail} />
+            <LikeList like={post.like} />
             <S.FlexRow>
               <S.InitialLink href='/main' passHref>
                 <S.IdLink>{postUserId}</S.IdLink>
