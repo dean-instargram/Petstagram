@@ -26,7 +26,6 @@ interface PostCardProps {
 export function PostCard({ postId }: PostCardProps) {
   const [post, setPost] = useState<DocumentData | undefined>(undefined);
   const [postUserData, setPostUserData] = useState<User | undefined>(undefined);
-  const [likeEmail, setLikeEmail] = useState<string[]>([]);
   const [postDateP, setPostDateP] = useState<string>('');
   const [commentIndex, setCommentIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,7 +70,7 @@ export function PostCard({ postId }: PostCardProps) {
 
   return (
     <>
-      {post && postUserData && likeEmail ? (
+      {post && postUserData ? (
         <S.Article>
           <PostHeader
             props={{

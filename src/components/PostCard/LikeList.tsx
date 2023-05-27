@@ -1,5 +1,5 @@
 import * as S from './PostCard.styled';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User } from '@/components/InfiniteScroll/postList';
 import { getData } from '@/firebase/utils';
 
