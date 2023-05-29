@@ -47,5 +47,5 @@ export interface User {
   phone: string | null;
   followers: string[] | null;
   following: string[];
-  scrap: string[] | null;
+  scrap: string[];
 }
