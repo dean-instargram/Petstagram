@@ -33,7 +33,7 @@ export function FollowList({ profile }: UserProfileProps) {
     } else {
       setIsFollow(false);
     }
-  }, [userInfo]);
+  }, [userInfo.data.following]);
 
   const handleFollowing = async () => {
     const userResult = (await getData('users', userUid)) as User;

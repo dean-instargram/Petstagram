@@ -45,7 +45,7 @@ export function PostIcon({ postId, like }: PostIconProps) {
     } else {
       setIsBookmark(false);
     }
-  }, [userInfo]);
+  }, [userInfo.data.scrap]);
 
   const handleHeart = async () => {
     const result = (await getData('posts', postId)) as Post;
