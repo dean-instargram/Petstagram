@@ -15,7 +15,7 @@ import {
 } from '@/components/index';
 
 import { getColor } from '@/theme/utils';
-import { isCreateAtType, caculateTime } from '@/utils/mainUtil';
+import { caculateTime } from '@/utils/mainUtil';
 import { doc, onSnapshot, DocumentData } from 'firebase/firestore';
 import { db } from '@/firebase/app';
 
@@ -73,9 +73,8 @@ export function PostCard({ postId }: PostCardProps) {
         getLikeUsers(uid);
       });
 
-      if (isCreateAtType(post.createAt)) {
-        setPostDateP(caculateTime(post.createAt.seconds));
-      }
+      const postDate = new Date(post.createAt);
+      setPostDateP(caculateTime(Number(postDate) / 1000));
     }
   }, [post]);
 

@@ -6,7 +6,6 @@ import {
   getDocs,
   getDoc,
   updateDoc,
-  serverTimestamp,
   query,
   where,
 } from 'firebase/firestore';
@@ -25,7 +24,7 @@ export function pushData(collection: string, object: object) {
 
 // 파이어스토어로 데이터 보내는 함수 (콜렉션 이름,넣을 객체)
 export function pushTestData(collection: string, object: Post) {
-  object['createAt'] = serverTimestamp();
+  object['createAt'] = new Date().toISOString();
   object['comment'].forEach((comment, index) => {
     object['comment'][index]['createAt'] = new Date().toISOString();
 
