@@ -90,7 +90,7 @@ export function PostCard({ postId }: PostCardProps) {
               postDateP,
             }}
           ></PostHeader>
-          <ImageSwiper images={images} />
+          <ImageSwiper images={images} style={{ height: '674px' }} />
           <PostIcon />
           <S.CommentSection>
             <LikeList likeEmail={likeEmail} />
