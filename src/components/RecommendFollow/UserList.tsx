@@ -36,7 +36,7 @@ export function UserList({
       </ProfileButton>
       <ProfileBox>
         <LinkStyle href='/main' passHref fontSize={fontSize}>
-          <IdLink>{user_id}</IdLink>
+          {user_id}
         </LinkStyle>
         <Name color={paragraphColor}>{profile.paragraph}</Name>
       </ProfileBox>
@@ -82,14 +82,13 @@ const ProfileBox = styled.div`
 `;
 
 const LinkStyle = styled(Link)<{ fontSize: string }>`
+  cursor: pointer;
   display: inline;
   text-decoration: none;
   color: black;
   font-size: ${(props) => props.fontSize};
   font-weight: 600;
 `;
-
-const IdLink = styled.a``;
 
 const Name = styled.p<{ color: string }>`
   width: 100%;
