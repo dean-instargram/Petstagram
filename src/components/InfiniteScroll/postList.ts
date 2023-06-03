@@ -40,7 +40,7 @@ export interface User {
   introduce: string | null;
   profile_url: string;
   phone: string | null;
-  followers: string[] | null;
+  followers: string[];
   following: string[];
-  scrap: string[] | null;
+  scrap: string[];
 }

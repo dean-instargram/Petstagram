@@ -7,6 +7,7 @@ import { Post, User } from '@/components/InfiniteScroll/postList';
 import { getData, updateData } from '@/firebase/utils';
 import Image from 'next/image';
 import heart from '@/public/icons/PostCard/heart.png';
+import heartFill from '@/public/icons/PostCard/heart-fill.png';
 import { getColor } from '@/theme/utils';
 import { useSelector } from 'react-redux';
 import { userUidState } from '@/types/index';
@@ -32,6 +33,7 @@ export const DetailCommentUnit = forwardRef<
   inputRef,
 }) {
   const userUid = useSelector((state: userUidState) => state.userUid.value);
+  const [isLike, setIsLike] = useState<boolean>(false);
   const [commentUserData, setCommentUserDate] = useState<User | undefined>(
     undefined
   );
@@ -62,10 +64,51 @@ export const DetailCommentUnit = forwardRef<
         // 댓글 삭제
         result.comment.splice(commentIndex, 1);
       }
-
       updateData('posts', postId, result);
     }
   };
+
+  const handleCommentLike = async () => {
+    const result = (await getData('posts', postId)) as Post;
+    if (result) {
+      if (isLike) {
+        // 좋아요 삭제
+        const index = data.like.findIndex((element) => element === userUid);
+        if (index !== -1) {
+          if (recommentIndex !== undefined) {
+            // 답글 이면
+            result.comment[commentIndex].recomment[recommentIndex].like.splice(
+              index,
+              1
+            );
+          } else {
+            // 댓글 이면
+            result.comment[commentIndex].like.splice(index, 1);
+          }
+        }
+      } else {
+        // 좋아요 추가
+        if (recommentIndex !== undefined) {
+          // 답글 이면
+          result.comment[commentIndex].recomment[recommentIndex].like.push(
+            userUid
+          );
+        } else {
+          // 댓글 이면
+          result.comment[commentIndex].like.push(userUid);
+        }
+      }
+      updateData('posts', postId, result);
+    }
+  };
+
+  useEffect(() => {
+    if (data.like.includes(userUid)) {
+      setIsLike(true);
+    } else {
+      setIsLike(false);
+    }
+  }, [data]);
 
   useEffect(() => {
     getCommentUserData();
@@ -103,8 +146,12 @@ export const DetailCommentUnit = forwardRef<
           ) : null}
         </S.FlexRow>
       </CommentDiv>
-      <S.IconButton>
-        <Image src={heart} alt='좋아요' width={30} height={30}></Image>
+      <S.IconButton onClick={handleCommentLike}>
+        {isLike ? (
+          <Image src={heartFill} alt='좋아요' width={30} height={30}></Image>
+        ) : (
+          <Image src={heart} alt='좋아요' width={30} height={30}></Image>
+        )}
       </S.IconButton>
     </CommentUnit>
   );

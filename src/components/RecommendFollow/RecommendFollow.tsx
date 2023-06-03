@@ -12,6 +12,7 @@ type RecommendFollows = {
 };
 
 type RecommendFollowProfile = {
+  user_uid: string;
   email: string;
   profile_url: string;
   paragraph: string;
@@ -80,6 +81,7 @@ export function RecommendFollow() {
     ) => {
       let followerParagraph = '';
       let recommendProfile = {
+        user_uid: '',
         email: '',
         profile_url: '',
         paragraph: '',
@@ -106,6 +108,7 @@ export function RecommendFollow() {
         const userData = recommendDataSnapshot.data() as User;
         recommendProfile = {
           ...recommendProfile,
+          user_uid: recommendDataSnapshot.id,
           email: userData.email,
           profile_url: userData.profile_url,
           paragraph: followerParagraph,
@@ -170,6 +173,7 @@ export function RecommendFollow() {
   };
 
   const userData = {
+    user_uid: userUid,
     email: userInfo.data.email.split('@')[0],
     profile_url: userInfo.data.profile_url,
     paragraph: userInfo.data.name,

@@ -26,7 +26,6 @@ interface PostCardProps {
 export function PostCard({ postId }: PostCardProps) {
   const [post, setPost] = useState<DocumentData | undefined>(undefined);
   const [postUserData, setPostUserData] = useState<User | undefined>(undefined);
-  const [likeEmail, setLikeEmail] = useState<string[]>([]);
   const [postDateP, setPostDateP] = useState<string>('');
   const [commentIndex, setCommentIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,13 +37,6 @@ export function PostCard({ postId }: PostCardProps) {
     if (!postUserData && post) {
       const result = (await getData('users', post.user_uid)) as User;
       if (result) setPostUserData(result);
-    }
-  };
-
-  const getLikeUsers = async (uid: string) => {
-    if (!postUserData && post) {
-      const result = (await getData('users', uid)) as User;
-      if (result) setLikeEmail((likeEmail) => [...likeEmail, result.email]);
     }
   };
 
@@ -69,9 +61,6 @@ export function PostCard({ postId }: PostCardProps) {
   useEffect(() => {
     if (post !== undefined) {
       getUserData();
-      post.like.map((uid: string) => {
-        getLikeUsers(uid);
-      });
 
       const postDate = new Date(post.createAt);
       setPostDateP(caculateTime(Number(postDate) / 1000));
@@ -80,7 +69,7 @@ export function PostCard({ postId }: PostCardProps) {
 
   return (
     <>
-      {post && postUserData && likeEmail ? (
+      {post && postUserData ? (
         <S.Article>
           <PostHeader
             props={{
@@ -90,9 +79,9 @@ export function PostCard({ postId }: PostCardProps) {
             }}
           ></PostHeader>
           <ImageSwiper images={images} style={{ height: '674px' }} />
-          <PostIcon />
+          <PostIcon postId={postId} like={post.like} />
           <S.CommentSection>
-            <LikeList likeEmail={likeEmail} />
+            <LikeList like={post.like} />
             <S.FlexRow>
               <S.InitialLink href='/main' passHref>
                 <S.IdLink>{postUserId}</S.IdLink>

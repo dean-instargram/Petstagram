@@ -1,10 +1,27 @@
 import * as S from './PostCard.styled';
+import React, { useEffect, useState } from 'react';
+import { User } from '@/components/InfiniteScroll/postList';
+import { getData } from '@/firebase/utils';
 
 interface LikeListProps {
-  likeEmail: string[];
+  like: string[];
 }
 
-export function LikeList({ likeEmail }: LikeListProps) {
+export function LikeList({ like }: LikeListProps) {
+  const [likeEmail, setLikeEmail] = useState<string[]>([]);
+
+  const getLikeUsers = async (uid: string) => {
+    const result = (await getData('users', uid)) as User;
+    if (result) setLikeEmail((likeEmail) => [...likeEmail, result.email]);
+  };
+
+  useEffect(() => {
+    setLikeEmail([]);
+    like.map((uid: string) => {
+      getLikeUsers(uid);
+    });
+  }, [like]);
+
   return (
     <S.LikeList>
       <S.InitialLink href='/main' passHref>
