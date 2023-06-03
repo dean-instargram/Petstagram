@@ -1,5 +1,4 @@
 import * as S from '@/components/PostCard/PostCard.styled';
-import { CreateAtType } from '@/components/InfiniteScroll/postList';
 import { User } from '@/components/InfiniteScroll/postList';
 import baseProfile from '@/public/profile.jpg';
 
@@ -26,15 +25,6 @@ export const caculateTime = (date: number): string => {
 
   return '방금 전';
 };
-
-export function isCreateAtType(value: any): value is CreateAtType {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'seconds' in value &&
-    'nanoseconds' in value
-  );
-}
 
 export const renderProfile = (postUserData: User | undefined) => {
   if (

@@ -44,8 +44,8 @@ export default function Login() {
         .signInWithEmailAndPassword(formState.email, formState.password)
         .then(() => {
           console.log("로그인 성공");
-          location.reload();
-          // router.push("/");
+          // location.reload();
+          router.push("/main");
         });
     } catch (error) {
       setErrorMessage("이메일, 비밀번호를 확인해주세요.");
