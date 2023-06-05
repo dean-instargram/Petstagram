@@ -15,7 +15,7 @@ import {
 } from '@/components/index';
 
 import { getColor } from '@/theme/utils';
-import { isCreateAtType, caculateTime } from '@/utils/mainUtil';
+import { caculateTime } from '@/utils/mainUtil';
 import { doc, onSnapshot, DocumentData } from 'firebase/firestore';
 import { db } from '@/firebase/app';
 import styled from 'styled-components';
@@ -74,9 +74,8 @@ export function DetailPostCard({ postId }: PostCardProps) {
         getLikeUsers(uid);
       });
 
-      if (isCreateAtType(post.createAt)) {
-        setPostDateP(caculateTime(post.createAt.seconds));
-      }
+      const postDate = new Date(post.createAt);
+      setPostDateP(caculateTime(Number(postDate) / 1000));
     }
   }, [post]);
 
@@ -114,8 +113,8 @@ export function DetailPostCard({ postId }: PostCardProps) {
                 );
               })}
             </S.CommentSection>
-            <PostIcon />
-            <LikeList likeEmail={likeEmail} />
+            {/* <PostIcon />
+            <LikeList likeEmail={likeEmail} /> */}
             {commentIndex ? (
               <AddComment
                 postId={postId}

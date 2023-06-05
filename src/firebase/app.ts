@@ -1,9 +1,9 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/firestore";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
-import "firebase/compat/database";
-import "firebase/compat/storage";
+import 'firebase/compat/database';
+import 'firebase/compat/storage';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -15,7 +15,11 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app(); // 이미 초기화되었다면, 초기화 된 것을 사용함
+}
 
 // //리얼 데이터 베이스
 // export const realDB = firebase.database();
@@ -24,7 +28,7 @@ export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const storage = firebase.storage();
 
-export const usersRef = db.collection("users"); // 유저 정보 컬렉션
-export const userWriteRef = db.collection("posts"); // 게시글 정보 컬렉션
+export const usersRef = db.collection('users'); // 유저 정보 컬렉션
+export const userWriteRef = db.collection('posts'); // 게시글 정보 컬렉션
 
 export default firebase;
