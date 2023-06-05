@@ -1,15 +1,15 @@
-import styled from "styled-components";
-import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import firebase, { auth } from "@/firebase/app";
-import Image from "next/image";
-import loginBanner from "../public/images/loginBanner.png";
-import logo from "../public/images/logo.svg";
+import styled from 'styled-components';
+import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import firebase, { auth } from '@/firebase/app';
+import Image from 'next/image';
+import loginBanner from '../public/images/loginBanner.png';
+import logo from '../public/images/logo.svg';
 import {
   RegisterButton,
   RegisterInput,
-} from "@/components/register/RegisterStyles";
+} from '@/components/register/RegisterStyles';
 interface state {
   userUid: { value: string };
 }
@@ -17,10 +17,10 @@ interface state {
 export default function Login() {
   const router = useRouter();
   const [formState, setFormState] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [showPopup, setShowPopup] = useState(false);
   //  로그인 버튼
 
@@ -32,23 +32,23 @@ export default function Login() {
 
   const handleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (formState.email == "") {
-      return setErrorMessage("이메일을 입력해주세요.");
+    if (formState.email == '') {
+      return setErrorMessage('이메일을 입력해주세요.');
     }
     if (!validateEmail(formState.email)) {
-      return setErrorMessage("올바른 이메일 주소가 아닙니다.");
+      return setErrorMessage('올바른 이메일 주소가 아닙니다.');
     }
     try {
       await firebase
         .auth()
         .signInWithEmailAndPassword(formState.email, formState.password)
         .then(() => {
-          console.log("로그인 성공");
+          console.log('로그인 성공');
           // location.reload();
-          router.push("/main");
+          router.push('/');
         });
     } catch (error) {
-      setErrorMessage("이메일, 비밀번호를 확인해주세요.");
+      setErrorMessage('이메일, 비밀번호를 확인해주세요.');
       // 로그인 실패 시 처리할 작업
     }
   };
@@ -57,11 +57,11 @@ export default function Login() {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      console.log("Successfully logged out");
+      console.log('Successfully logged out');
 
       // 로그아웃 후 처리할 작업이 있다면 여기에 추가할 수 있습니다.
     } catch (error) {
-      console.error("Error occurred while logging out", error);
+      console.error('Error occurred while logging out', error);
     }
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,61 +74,61 @@ export default function Login() {
     <Article>
       {/* alt 안준 이유는 슬비쌤이 이런 광고성 배너는 비워두는게 좋다고 하심 */}
       <Image
-        className="loginBanner"
+        className='loginBanner'
         src={loginBanner}
-        alt=""
+        alt=''
         width={398}
         height={501}
       />
       <SectionWrapper>
         <MainDiv>
-          <Image src={logo} alt="로고" width={178.75} height={38.48} />
+          <Image src={logo} alt='로고' width={178.75} height={38.48} />
           <form>
-            <label htmlFor="email" className="a11y-hidden">
+            <label htmlFor='email' className='a11y-hidden'>
               이메일
             </label>
             <RegisterInput
-              className="emailInput"
-              type="email"
-              name="email"
+              className='emailInput'
+              type='email'
+              name='email'
               value={formState.email}
               onChange={handleInputChange}
-              id="email"
-              placeholder="이메일"
+              id='email'
+              placeholder='이메일'
               required
             />
 
-            <label htmlFor="password" className="a11y-hidden">
+            <label htmlFor='password' className='a11y-hidden'>
               비밀번호
             </label>
             <RegisterInput
-              type="password"
-              className="passwordInput"
-              name="password"
+              type='password'
+              className='passwordInput'
+              name='password'
               value={formState.password}
               onChange={handleInputChange}
-              id="password"
-              placeholder="비밀번호"
+              id='password'
+              placeholder='비밀번호'
               required
             />
 
-            <RegisterButton type="submit" onClick={handleSignIn}>
+            <RegisterButton type='submit' onClick={handleSignIn}>
               로그인
             </RegisterButton>
           </form>
-          <span className="orSpan">또는</span>
-          <p className="errorMessage">{errorMessage}</p>
-          <Link className="searchPassword" href="/passwordreset">
+          <span className='orSpan'>또는</span>
+          <p className='errorMessage'>{errorMessage}</p>
+          <Link className='searchPassword' href='/passwordreset'>
             비밀번호를 잊으셨나요?
           </Link>
         </MainDiv>
         <SideDiv>
           <p>계정이 없으신가요?</p>
-          <Link href="/register">가입하기</Link>
+          <Link href='/register'>가입하기</Link>
         </SideDiv>
         {showPopup && <p>로그인 확인부탁</p>}
-        <form action="">
-          <button type="submit" onClick={handleLogout}>
+        <form action=''>
+          <button type='submit' onClick={handleLogout}>
             로그아웃
           </button>
         </form>
@@ -182,7 +182,7 @@ const MainDiv = styled.div`
   }
   .orSpan::before,
   .orSpan::after {
-    content: "";
+    content: '';
     display: block;
     width: 116px;
     background-color: #ffb800;
