@@ -52,18 +52,7 @@ export default function Login() {
       // 로그인 실패 시 처리할 작업
     }
   };
-  // 로그아웃 버튼 (임시)
 
-  const handleLogout = async () => {
-    try {
-      await auth.signOut();
-      console.log('Successfully logged out');
-
-      // 로그아웃 후 처리할 작업이 있다면 여기에 추가할 수 있습니다.
-    } catch (error) {
-      console.error('Error occurred while logging out', error);
-    }
-  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState((prevState) => ({
       ...prevState,
@@ -127,11 +116,6 @@ export default function Login() {
           <Link href='/register'>가입하기</Link>
         </SideDiv>
         {showPopup && <p>로그인 확인부탁</p>}
-        <form action=''>
-          <button type='submit' onClick={handleLogout}>
-            로그아웃
-          </button>
-        </form>
       </SectionWrapper>
     </Article>
   );
