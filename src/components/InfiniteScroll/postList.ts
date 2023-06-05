@@ -1,0 +1,46 @@
+// lib/postList.ts
+import firebase from '@/firebase/app';
+
+export interface Recomment {
+  user_uid: string;
+  email: string;
+  content: string;
+  createAt: string | firebase.firestore.FieldValue;
+  like: string[];
+}
+
+export interface Comment {
+  user_uid: string;
+  email: string;
+  content: string;
+  createAt: string | firebase.firestore.FieldValue;
+  like: string[];
+  recomment: Recomment[];
+}
+
+interface Image {
+  src: string;
+  alt: string;
+}
+
+export type Post = {
+  user_uid: string;
+  content: string;
+  createAt: string | firebase.firestore.FieldValue;
+  images: Image[];
+  like: string[];
+  comment: Comment[];
+};
+
+export interface User {
+  name: string;
+  nickname: string;
+  email: string;
+  post_uid: string[] | null;
+  introduce: string | null;
+  profile_url: string;
+  phone: string | null;
+  followers: string[];
+  following: string[];
+  scrap: string[];
+}

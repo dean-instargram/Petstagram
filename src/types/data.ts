@@ -1,38 +1,50 @@
-interface User {
-  uid: string;
+import firebase from '@/firebase/app';
+
+export interface User {
   name: string;
   nickname: string;
   email: string;
   post_uid: string[] | null;
   introduce: string | null;
-  profile_url: string | null;
+  profile_url: string;
   phone: string | null;
   followers: string[] | null;
-  following: string[] | null;
+  following: string[];
   scrap: string[] | null;
-}
-
-interface Comment {
-  user_uid: string;
-  content: string;
-  createAt: string;
-  like: string[];
-  recomment: Recomment[];
 }
 
 interface Recomment {
   user_uid: string;
+  email: string;
   content: string;
-  createAt: string;
+  createAt: string | firebase.firestore.FieldValue;
   like: string[];
 }
 
-interface Post {
-  uid: string;
+export interface Comment {
+  user_uid: string;
+  email: string;
+  content: string;
+  createAt: string | firebase.firestore.FieldValue;
+  like: string[];
+  recomment: Recomment[];
+}
+
+interface Image {
+  src: string;
+  alt: string;
+}
+
+export type CreateAtType = {
+  seconds: number;
+  nanoseconds: number;
+};
+
+export type Post = {
   user_uid: string;
   content: string;
-  createAt: string;
-  images: string[];
+  createAt: string | firebase.firestore.FieldValue | CreateAtType;
+  images: Image[];
   like: string[];
   comment: Comment[];
-}
+};
