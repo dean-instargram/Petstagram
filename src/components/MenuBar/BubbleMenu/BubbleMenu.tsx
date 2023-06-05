@@ -29,7 +29,7 @@ export function BubbleMenu() {
       <FirstLink href='setting'>
         <BubbleIcon src={settings} alt='설정' /> 설정
       </FirstLink>
-      <BubbleLink href='main'>
+      <BubbleLink href='/'>
         <BubbleIcon src={bookMark} alt='저장됨' /> 저장됨
       </BubbleLink>
       <BubbleLink as='button'>

@@ -38,20 +38,20 @@ export function MenuBar() {
     <>
       <DesktopMenuBar>
         <Logo>
-          <LogoLink href='/main'>
+          <LogoLink href='/'>
             <Image src={desktopLogo} alt='펫스타그램'></Image>
           </LogoLink>
         </Logo>
         <h2 className='a11y-hidden'>메뉴바</h2>
         <Menu>
           <div>
-            <MenuLink href='/main'>
+            <MenuLink href='/'>
               <MenuIcon src={homeEmpty} alt='홈'></MenuIcon>홈
             </MenuLink>
             <MenuLink as='button'>
               <MenuIcon src={searchEmpty} alt='검색'></MenuIcon>검색
             </MenuLink>
-            <MenuLink href='/main'>
+            <MenuLink href='/'>
               <MenuIcon src={messageEmpty} alt='메세지'></MenuIcon>메세지
             </MenuLink>
             <MenuLink as='button'>
@@ -60,7 +60,7 @@ export function MenuBar() {
             <MenuLink as='button'>
               <MenuIcon src={postEmpty} alt='만들기'></MenuIcon>만들기
             </MenuLink>
-            <MenuLink href='/main'>
+            <MenuLink href='/'>
               <ProfileIcon
                 src={userInfo.data.profile_url}
                 alt='프로필'
@@ -79,20 +79,20 @@ export function MenuBar() {
       </DesktopMenuBar>
       <TabletMenuBar>
         <TabletLogo>
-          <LogoLink href='/main'>
+          <LogoLink href='/'>
             <Image src={tabletLogo} alt='펫스타그램'></Image>
           </LogoLink>
         </TabletLogo>
         <h2 className='a11y-hidden'>메뉴바</h2>
         <Menu>
           <div>
-            <TabletMenuLink href='/main'>
+            <TabletMenuLink href='/'>
               <TabletIcon src={homeEmpty} alt='홈'></TabletIcon>
             </TabletMenuLink>
             <TabletMenuLink as='button'>
               <TabletIcon src={searchEmpty} alt='검색'></TabletIcon>
             </TabletMenuLink>
-            <TabletMenuLink href='/main'>
+            <TabletMenuLink href='/'>
               <TabletIcon src={messageEmpty} alt='메세지'></TabletIcon>
             </TabletMenuLink>
             <TabletMenuLink as='button'>
@@ -101,7 +101,7 @@ export function MenuBar() {
             <TabletMenuLink as='button'>
               <TabletIcon src={postEmpty} alt='만들기'></TabletIcon>
             </TabletMenuLink>
-            <TabletMenuLink href='/main'>
+            <TabletMenuLink href='/'>
               <TabletProfileIcon
                 src={userInfo.data.profile_url}
                 alt='프로필'
@@ -120,7 +120,7 @@ export function MenuBar() {
       <MobileMenuBar>
         <h2 className='a11y-hidden'>메뉴바</h2>
         <MobileMenu>
-          <TabletMenuLink href='/main'>
+          <TabletMenuLink href='/'>
             <TabletIcon src={homeEmpty} alt='홈'></TabletIcon>
           </TabletMenuLink>
           <TabletMenuLink as='button'>
@@ -129,10 +129,10 @@ export function MenuBar() {
           <TabletMenuLink as='button'>
             <TabletIcon src={postEmpty} alt='만들기'></TabletIcon>
           </TabletMenuLink>
-          <TabletMenuLink href='/main'>
+          <TabletMenuLink href='/'>
             <TabletIcon src={messageEmpty} alt='메세지'></TabletIcon>
           </TabletMenuLink>
-          <TabletMenuLink href='/main'>
+          <TabletMenuLink href='/'>
             <TabletProfileIcon
               src={userInfo.data.profile_url}
               alt='프로필'
