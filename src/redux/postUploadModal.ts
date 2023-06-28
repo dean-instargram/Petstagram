@@ -6,6 +6,8 @@ export interface PostUploadModalState {
   curContentIndex: number;
   nextBtnActived: boolean;
   prevBtnActived: boolean;
+  contentLength: number;
+  isEnded: boolean;
 }
 
 const initialState: PostUploadModalState = {
@@ -13,21 +15,35 @@ const initialState: PostUploadModalState = {
   curContentIndex: 0,
   nextBtnActived: false,
   prevBtnActived: false,
+  contentLength: 0,
+  isEnded: false,
 };
 
 const postUploadModalSlice = createSlice({
   name: "PostUploadModal",
   initialState,
   reducers: {
-    open: (state) => {
+    open: (state, action) => {
       state.isOpen = true;
+      state.curContentIndex = 0;
+      state.nextBtnActived = false;
+      state.prevBtnActived = false;
+      state.contentLength = action.payload;
+      state.isEnded = false;
     },
     close: (state) => {
       state.isOpen = false;
+      state.curContentIndex = 0;
+      // state.nextBtnActived = false;
+      // state.prevBtnActived = false;
+      state.contentLength = 0;
+      state.isEnded = false;
     },
     addCurContentIndex: (state, action) => {
-      if (state.curContentIndex + action.payload >= 0 && state.curContentIndex + action.payload <= 1) {
-        console.log("state.curContentIndex + action.payload", state.curContentIndex + action.payload);
+      if (state.curContentIndex + action.payload >= state.contentLength) {
+        state.isEnded = true;
+      } else if (state.curContentIndex + action.payload >= 0) {
+        // console.log("state.curContentIndex + action.payload", state.curContentIndex + action.payload);
 
         state.curContentIndex = state.curContentIndex + action.payload;
       }
