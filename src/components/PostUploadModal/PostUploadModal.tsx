@@ -1,6 +1,6 @@
 import postUploaderSlice from "@/redux/postImageUploader";
 import postUploadModalSlice, { PostUploadModalState, addCurContentIndex, close, open } from "@/redux/postUploadModal";
-import { MouseEvent, ReactElement, useEffect, useState } from "react";
+import React, { MouseEvent, ReactElement, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import styled, { StyledComponent } from "styled-components";
@@ -11,11 +11,12 @@ export interface PostUploadModalContent {
 }
 export interface PostUploadModalProps {
   contentList: PostUploadModalContent[];
-  openBtnStyle?: StyledComponent<"button", any, {}, never>;
+  // StyledOpenBtnComponent?: StyledComponent<"button", any, {}, never>;
+  StyledOpenBtnComponent?: React.ReactElement;
   /**
    * 해당 값을 false로 주게 되면 바깥 화면 터치로 모달을 닫게 하고 closeBtn은 존재하지 않게 됨
    * */
-  closeBtnStyle?: StyledComponent<"button", any, {}, never> | boolean;
+  StyledCloseBtnComponent?: StyledComponent<"button", any, {}, never> | boolean;
   hasHeader?: boolean;
   contentStyle?: StyledComponent<"div", any, {}, never>;
 }
@@ -23,7 +24,13 @@ export interface PostUploadModalProps {
 interface state {
   postUploadModalSlice: PostUploadModalState;
 }
-export const PostUploadModal = ({ contentList, openBtnStyle, closeBtnStyle, hasHeader = false, contentStyle }: PostUploadModalProps) => {
+export const PostUploadModal = ({
+  contentList,
+  StyledOpenBtnComponent = <div></div>,
+  StyledCloseBtnComponent,
+  hasHeader = false,
+  contentStyle,
+}: PostUploadModalProps) => {
   const [hasCloseBtn, setHasCloseBtn] = useState(false);
   const dispatch = useDispatch();
   const isOpen = useSelector(({ postUploadModalSlice: state }: state) => {
@@ -41,22 +48,22 @@ export const PostUploadModal = ({ contentList, openBtnStyle, closeBtnStyle, hasH
 
   const moveNextContentHandler = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (curContentIndex < contentList.length) {
-      dispatch(addCurContentIndex(1));
-    }
+    dispatch(addCurContentIndex(1));
   };
   const movePrevContentHandler = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (curContentIndex > 0) {
-      dispatch(addCurContentIndex(-1));
-    }
+    dispatch(addCurContentIndex(-1));
   };
 
   const openModalHandler = () => {
     console.log(isOpen);
 
-    dispatch(open());
+    dispatch(open(contentList.length));
   };
+  const CustomOpenButtonWithHandler = React.cloneElement(StyledOpenBtnComponent, {
+    onClick: openModalHandler,
+  });
+
   const closeModalHandler = () => {
     dispatch(postUploaderSlice.actions.clearImageList());
     dispatch(close());
@@ -64,12 +71,9 @@ export const PostUploadModal = ({ contentList, openBtnStyle, closeBtnStyle, hasH
 
   useEffect(() => {
     // setCurContentIndex(contentList.length);
-    if (openBtnStyle) {
-      ModalBtn = openBtnStyle;
-    }
-    if (typeof closeBtnStyle != "boolean" && closeBtnStyle) {
-      ExitBtn = closeBtnStyle;
-    } else if (closeBtnStyle == false) {
+    if (typeof StyledCloseBtnComponent != "boolean" && StyledCloseBtnComponent) {
+      ExitBtn = StyledCloseBtnComponent;
+    } else if (StyledCloseBtnComponent == false) {
       setHasCloseBtn(false);
     }
 
@@ -81,14 +85,8 @@ export const PostUploadModal = ({ contentList, openBtnStyle, closeBtnStyle, hasH
   return (
     <>
       <ModalContainer id="modal" role="dialog" tabIndex={-1} aria-modal="true">
-        <ModalBtn
-          onClick={openModalHandler}
-          // 클릭하면 Modal이 열린 상태(isOpen)를 boolean 타입으로 변경하는 메소드가 실행되어야 합니다.
-        >
-          {" "}
-          Open Modal
-          {/* 조건부 렌더링을 활용해서 Modal이 열린 상태(isOpen이 true인 상태)일 때는 ModalBtn의 내부 텍스트가 'Opened!' 로 Modal이 닫힌 상태(isOpen이 false인 상태)일 때는 ModalBtn 의 내부 텍스트가 'Open Modal'이 되도록 구현 */}
-        </ModalBtn>
+        {StyledOpenBtnComponent ? CustomOpenButtonWithHandler : <ModalBtn onClick={openModalHandler}>Open Modal</ModalBtn>}
+
         {/* 조건부 렌더링을 활용해서 Modal이 열린 상태(isOpen이 true인 상태)일 때만 모달창과 배경이 뜰 수 있게 구현 */}
         {isOpen && contentList[curContentIndex] ? (
           <ModalBackdrop onClick={closeModalHandler}>
@@ -130,7 +128,7 @@ export const ModalContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  /* height: 100%; */
 `;
 
 export const ModalBackdrop = styled.div`
@@ -182,24 +180,14 @@ export const ModalView = styled.div.attrs((props) => ({
   display: flex;
   align-items: center;
   flex-direction: column;
-  border-radius: 20px;
+  border-radius: 20px 20px 0 0;
 
   overflow: hidden;
   background-color: #ffffff;
-
-  /* > div.modalContent {
-    height: 700px;
-    min-width: 803px;
-    max-width: 1095px;
-    border-top: 0.8px gray solid;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  } */
 `;
 
 let ModalContent = styled.div`
-  height: 700px;
+  height: 100%;
   min-width: 803px;
   max-width: 1095px;
   border-top: 0.8px gray solid;
