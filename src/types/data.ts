@@ -1,4 +1,4 @@
-import firebase from '@/firebase/app';
+import firebase from "@/firebase/app";
 
 export interface User {
   name: string;
@@ -30,7 +30,7 @@ export interface Comment {
   recomment: Recomment[];
 }
 
-interface Image {
+export interface ImageObj {
   src: string;
   alt: string;
 }
@@ -44,7 +44,7 @@ export type Post = {
   user_uid: string;
   content: string;
   createAt: string | firebase.firestore.FieldValue | CreateAtType;
-  images: Image[];
+  images: ImageObj[];
   like: string[];
   comment: Comment[];
 };
