@@ -1,25 +1,28 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import styled from 'styled-components';
-import { useState } from 'react';
-import { getColor } from '@/theme/utils';
-import { useSelector } from 'react-redux';
-import { userUidState, userDataState } from '@/types/index';
-import { BubbleMenu } from '@/components';
+import Image from "next/image";
+import Link from "next/link";
+import styled from "styled-components";
+import { useState } from "react";
+import { getColor } from "@/theme/utils";
+import { useSelector } from "react-redux";
+import { userUidState, userDataState } from "@/types/index";
+import { BubbleMenu } from "@/components";
 
-import desktopLogo from '@/public/images/logo.svg';
-import tabletLogo from '@/public/images/logo-tablet.svg';
-import homeEmpty from '@/public/icons/MenuBar/home-empty.png';
-import homeFill from '@/public/icons/MenuBar/home-fill.png';
-import searchEmpty from '@/public/icons/MenuBar/search-empty.png';
-import searchFill from '@/public/icons/MenuBar/search-fill.png';
-import messageEmpty from '@/public/icons/MenuBar/message-empty.png';
-import messageFill from '@/public/icons/MenuBar/message-fill.png';
-import alertEmpty from '@/public/icons/MenuBar/alert-empty.png';
+import desktopLogo from "@/public/images/logo.svg";
+import tabletLogo from "@/public/images/logo-tablet.svg";
+import homeEmpty from "@/public/icons/MenuBar/home-empty.png";
+import homeFill from "@/public/icons/MenuBar/home-fill.png";
+import searchEmpty from "@/public/icons/MenuBar/search-empty.png";
+import searchFill from "@/public/icons/MenuBar/search-fill.png";
+import messageEmpty from "@/public/icons/MenuBar/message-empty.png";
+import messageFill from "@/public/icons/MenuBar/message-fill.png";
+import alertEmpty from "@/public/icons/MenuBar/alert-empty.png";
 // import alertFill from '@/public/icons/MenuBar/alert-fill.png';
-import postEmpty from '@/public/icons/MenuBar/post-empty.png';
+import postEmpty from "@/public/icons/MenuBar/post-empty.png";
 // import postFill from '@/public/icons/MenuBar/post-fill.png';
-import seeMore from '@/public/icons/MenuBar/menuBurger.png';
+import seeMore from "@/public/icons/MenuBar/menuBurger.png";
+import { PostUploadModal } from "../PostUploadModal/PostUploadModal";
+import { PostImageUploader } from "../PostImageUploader/PostImageUploader";
+import { PostTextUploader } from "../PostTextUploader/PostTextUploader";
 
 export function MenuBar() {
   const [isBubble, setIsBubble] = useState<boolean>(false);
@@ -34,112 +37,146 @@ export function MenuBar() {
     setIsBubble(!isBubble);
   };
 
+  const makeCustomOpenButton = (src, alt: string, type: string) => {
+    if (type == "desktop") {
+      return (
+        <MenuLink as="button">
+          <MenuIcon src={src} alt={alt}></MenuIcon>만들기
+        </MenuLink>
+      );
+    } else if (type == "tablet") {
+      return (
+        <TabletMenuLink as="button">
+          <TabletIcon src={src} alt={alt}></TabletIcon>
+        </TabletMenuLink>
+      );
+    } else if (type == "mobile") {
+      return (
+        <TabletMenuLink as="button">
+          <TabletIcon src={src} alt={alt}></TabletIcon>
+        </TabletMenuLink>
+      );
+    }
+
+    return (
+      <TabletMenuLink as="button">
+        <TabletIcon src={src} alt={alt}></TabletIcon>
+      </TabletMenuLink>
+    );
+  };
+
   return (
     <>
       <DesktopMenuBar>
         <Logo>
-          <LogoLink href='/'>
-            <Image src={desktopLogo} alt='펫스타그램'></Image>
+          <LogoLink href="/">
+            <Image src={desktopLogo} alt="펫스타그램"></Image>
           </LogoLink>
         </Logo>
-        <h2 className='a11y-hidden'>메뉴바</h2>
+        <h2 className="a11y-hidden">메뉴바</h2>
         <Menu>
           <div>
-            <MenuLink href='/'>
-              <MenuIcon src={homeEmpty} alt='홈'></MenuIcon>홈
+            <MenuLink href="/">
+              <MenuIcon src={homeEmpty} alt="홈"></MenuIcon>홈
             </MenuLink>
-            <MenuLink as='button'>
-              <MenuIcon src={searchEmpty} alt='검색'></MenuIcon>검색
+            <MenuLink as="button">
+              <MenuIcon src={searchEmpty} alt="검색"></MenuIcon>검색
             </MenuLink>
-            <MenuLink href='/'>
-              <MenuIcon src={messageEmpty} alt='메세지'></MenuIcon>메세지
+            <MenuLink href="/">
+              <MenuIcon src={messageEmpty} alt="메세지"></MenuIcon>메세지
             </MenuLink>
-            <MenuLink as='button'>
-              <MenuIcon src={alertEmpty} alt='알림'></MenuIcon>알림
+            <MenuLink as="button">
+              <MenuIcon src={alertEmpty} alt="알림"></MenuIcon>알림
             </MenuLink>
-            <MenuLink as='button'>
-              <MenuIcon src={postEmpty} alt='만들기'></MenuIcon>만들기
-            </MenuLink>
-            <MenuLink href='/'>
-              <ProfileIcon
-                src={userInfo.data.profile_url}
-                alt='프로필'
-                width={27}
-                height={27}
-                unoptimized
-              ></ProfileIcon>
+            {/* <MenuLink as="button">
+              <MenuIcon src={postEmpty} alt="만들기"></MenuIcon>만들기
+            </MenuLink> */}
+            <PostUploadModal
+              contentList={[
+                { modalTitle: "새 게시물 만들기", content: <PostImageUploader /> },
+                { modalTitle: "새 게시물 만들기", content: <PostTextUploader /> },
+              ]}
+              hasHeader={true}
+              StyledOpenBtnComponent={makeCustomOpenButton(postEmpty, "만들기", "desktop")}
+            />
+            <MenuLink href="/">
+              <ProfileIcon src={userInfo.data.profile_url} alt="프로필" width={27} height={27} unoptimized></ProfileIcon>
               프로필
             </MenuLink>
           </div>
           {isBubble ? <BubbleMenu /> : null}
-          <SeeMoreButton as='button' onClick={handleBubble}>
-            <MenuIcon src={seeMore} alt='더보기'></MenuIcon>더보기
+          <SeeMoreButton as="button" onClick={handleBubble}>
+            <MenuIcon src={seeMore} alt="더보기"></MenuIcon>더보기
           </SeeMoreButton>
         </Menu>
       </DesktopMenuBar>
       <TabletMenuBar>
         <TabletLogo>
-          <LogoLink href='/'>
-            <Image src={tabletLogo} alt='펫스타그램'></Image>
+          <LogoLink href="/">
+            <Image src={tabletLogo} alt="펫스타그램"></Image>
           </LogoLink>
         </TabletLogo>
-        <h2 className='a11y-hidden'>메뉴바</h2>
+        <h2 className="a11y-hidden">메뉴바</h2>
         <Menu>
           <div>
-            <TabletMenuLink href='/'>
-              <TabletIcon src={homeEmpty} alt='홈'></TabletIcon>
+            <TabletMenuLink href="/">
+              <TabletIcon src={homeEmpty} alt="홈"></TabletIcon>
             </TabletMenuLink>
-            <TabletMenuLink as='button'>
-              <TabletIcon src={searchEmpty} alt='검색'></TabletIcon>
+            <TabletMenuLink as="button">
+              <TabletIcon src={searchEmpty} alt="검색"></TabletIcon>
             </TabletMenuLink>
-            <TabletMenuLink href='/'>
-              <TabletIcon src={messageEmpty} alt='메세지'></TabletIcon>
+            <TabletMenuLink href="/">
+              <TabletIcon src={messageEmpty} alt="메세지"></TabletIcon>
             </TabletMenuLink>
-            <TabletMenuLink as='button'>
-              <TabletIcon src={alertEmpty} alt='알림'></TabletIcon>
+            <TabletMenuLink as="button">
+              <TabletIcon src={alertEmpty} alt="알림"></TabletIcon>
             </TabletMenuLink>
-            <TabletMenuLink as='button'>
-              <TabletIcon src={postEmpty} alt='만들기'></TabletIcon>
-            </TabletMenuLink>
-            <TabletMenuLink href='/'>
-              <TabletProfileIcon
-                src={userInfo.data.profile_url}
-                alt='프로필'
-                width={27}
-                height={27}
-                unoptimized
-              ></TabletProfileIcon>
+            {/* <TabletMenuLink as="button">
+              <TabletIcon src={postEmpty} alt="만들기"></TabletIcon>
+            </TabletMenuLink> */}
+            <PostUploadModal
+              contentList={[
+                { modalTitle: "새 게시물 만들기", content: <PostImageUploader /> },
+                { modalTitle: "새 게시물 만들기", content: <PostTextUploader /> },
+              ]}
+              hasHeader={true}
+              StyledOpenBtnComponent={makeCustomOpenButton(postEmpty, "만들기", "tablet")}
+            />
+            <TabletMenuLink href="/">
+              <TabletProfileIcon src={userInfo.data.profile_url} alt="프로필" width={27} height={27} unoptimized></TabletProfileIcon>
             </TabletMenuLink>
           </div>
           {isBubble ? <BubbleMenu /> : null}
-          <SeeMoreButton as='button' onClick={handleBubble}>
-            <TabletIcon src={seeMore} alt='더보기'></TabletIcon>
+          <SeeMoreButton as="button" onClick={handleBubble}>
+            <TabletIcon src={seeMore} alt="더보기"></TabletIcon>
           </SeeMoreButton>
         </Menu>
       </TabletMenuBar>
       <MobileMenuBar>
-        <h2 className='a11y-hidden'>메뉴바</h2>
+        <h2 className="a11y-hidden">메뉴바</h2>
         <MobileMenu>
-          <TabletMenuLink href='/'>
-            <TabletIcon src={homeEmpty} alt='홈'></TabletIcon>
+          <TabletMenuLink href="/">
+            <TabletIcon src={homeEmpty} alt="홈"></TabletIcon>
           </TabletMenuLink>
-          <TabletMenuLink as='button'>
-            <TabletIcon src={alertEmpty} alt='알림'></TabletIcon>
+          <TabletMenuLink as="button">
+            <TabletIcon src={alertEmpty} alt="알림"></TabletIcon>
           </TabletMenuLink>
-          <TabletMenuLink as='button'>
-            <TabletIcon src={postEmpty} alt='만들기'></TabletIcon>
+          {/* <TabletMenuLink as="button">
+            <TabletIcon src={postEmpty} alt="만들기"></TabletIcon>
+          </TabletMenuLink> */}
+          <PostUploadModal
+            contentList={[
+              { modalTitle: "새 게시물 만들기", content: <PostImageUploader /> },
+              { modalTitle: "새 게시물 만들기", content: <PostTextUploader /> },
+            ]}
+            hasHeader={true}
+            StyledOpenBtnComponent={makeCustomOpenButton(postEmpty, "만들기", "mobile")}
+          />
+          <TabletMenuLink href="/">
+            <TabletIcon src={messageEmpty} alt="메세지"></TabletIcon>
           </TabletMenuLink>
-          <TabletMenuLink href='/'>
-            <TabletIcon src={messageEmpty} alt='메세지'></TabletIcon>
-          </TabletMenuLink>
-          <TabletMenuLink href='/'>
-            <TabletProfileIcon
-              src={userInfo.data.profile_url}
-              alt='프로필'
-              width={27}
-              height={27}
-              unoptimized
-            ></TabletProfileIcon>
+          <TabletMenuLink href="/">
+            <TabletProfileIcon src={userInfo.data.profile_url} alt="프로필" width={27} height={27} unoptimized></TabletProfileIcon>
           </TabletMenuLink>
         </MobileMenu>
       </MobileMenuBar>
@@ -153,7 +190,7 @@ const DesktopMenuBar = styled.section`
   width: 350px;
   height: 100vh;
   padding: 40px 30px 24.52px 30px;
-  border-right: 1px solid ${getColor('Grey/grey-100')};
+  border-right: 1px solid ${getColor("Grey/grey-100")};
   z-index: 10;
 
   @media (max-width: 1919px) {
@@ -171,7 +208,7 @@ const TabletMenuBar = styled.section`
   width: 55px;
   height: 100vh;
   padding: 40px 30px 24.52px 30px;
-  border-right: 1px solid ${getColor('Grey/grey-100')};
+  border-right: 1px solid ${getColor("Grey/grey-100")};
   z-index: 10;
 
   @media (max-width: 768px) or (min-width: 1460px) {
@@ -184,7 +221,7 @@ const MobileMenuBar = styled.section`
   bottom: 0px;
   width: 100%;
   padding: 10px 27.7px;
-  border-right: 1px solid ${getColor('Grey/grey-100')};
+  border-right: 1px solid ${getColor("Grey/grey-100")};
   background-color: white;
   z-index: 10;
 
@@ -230,7 +267,7 @@ const MenuLink = styled(Link)`
   border-radius: 8px;
 
   :hover {
-    background-color: ${getColor('secondary color')};
+    background-color: ${getColor("secondary color")};
   }
 `;
 
